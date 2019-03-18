@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<processor_spec>
+  <programcounter register="IC"/>
+  <register_data>                                                                                                                                
+    <register name="r1_" group="Alt"/>
+    <register name="r2_" group="Alt"/>
+    <register name="r3_" group="Alt"/>
+    <register name="r4_" group="Alt"/>
+    <register name="r5_" group="Alt"/>
+    <register name="r6_" group="Alt"/>
+    <register name="r7_" group="Alt"/>
+  </register_data>                                                                                                                               
+  <default_symbols>
+    <symbol name="_START" address="ram:0000" entry="true"/>
+  </default_symbols>
+</processor_spec>
+

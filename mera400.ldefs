@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<language_definitions>
+  <language processor="mera400"
+            endian="big"
+            size="16"
+            variant="default"
+            version="1.0"
+            slafile="mera400.sla"
+            processorspec="mera400.pspec"
+            id="mera400:BE:16:default">
+    <description>MERA-400</description>
+    <compiler name="default" spec="mera400.cspec" id="default"/>
+  </language>
+</language_definitions>
