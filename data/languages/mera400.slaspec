@@ -70,6 +70,12 @@ rel7: loc is tsign=1 & t [ loc = inst_next - t; ] { export *:2 loc; }
 addr16: imm16 is imm16 { export *:2 imm16; }
 addr16_nb: imm16 is imm16 { export *[nbseg]:2 imm16; }
 
+no16: imm16 is imm16 { export *:2 imm16; }
+en16: imm16 is imm16 { export *:2 imm16; }
+ok16: imm16 is imm16 { export *:2 imm16; }
+pe16: imm16 is imm16 { export *:2 imm16; }
+ioarg: no16, en16, ok16, pe16 is no16; en16; ok16; pe16 {  }
+
 norm: regC		is d=0 & regB=0 & regC { export regC; }
 norm: regC+regB		is d=0 & regC & regB { tmp = regB+regC; export tmp; }
 norm: imm16		is d=0 & regB=0 & regC=0; imm16 { tmp:2 = imm16; export tmp; }
@@ -112,8 +118,8 @@ normad_nb: [regB+imm16] is d=1 & regC=0 & regB; imm16 { tmp:2 = *[nbseg] (regB +
 :BS regA, norm is (op=0x1a & regA) ... & norm { if ((regA & r7) == (norm & r7)) goto inst_next; }
 :BC regA, norm is (op=0x1b & regA) ... & norm { if ((regA & norm) != norm) goto inst_next; }
 :BN regA, norm is (op=0x1c & regA) ... & norm { if ((regA & norm) == 0) goto inst_next; }
-:OU regA, norm is (op=0x1d & regA) ... & norm { out(regA, norm); }
-:IN regA, norm is (op=0x1e & regA) ... & norm { in(regA, norm); }
+:OU regA, norm is (op=0x1d & regA) ... & norm; ioarg { out(regA, norm, ioarg); }
+:IN regA, norm is (op=0x1e & regA) ... & norm; ioarg  { in(regA, norm, ioarg); }
 
 :AD normad is (op=0x1f & opextA=0x0) ... & normad { tmp:4 = (zext(r1)*65536 + zext(r2)) + ((*normad)*65536 + (*(normad+1))); r1 = tmp(2); r2 = tmp:2; }
 :SD normad is (op=0x1f & opextA=0x1) ... & normad { tmp:4 = (zext(r1)*65536 + zext(r2)) - ((*normad)*65536 + (*(normad+1))); r1 = tmp(2); r2 = tmp:2; }
