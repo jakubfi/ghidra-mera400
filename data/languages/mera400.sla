@@ -2,9 +2,10 @@
 <spaces defaultspace="ram">
 <space_unique name="unique" index="1" bigendian="true" delay="0" size="4" physical="true"/>
 <space name="ram" index="2" bigendian="true" delay="1" size="2" wordsize="2" physical="true"/>
-<space name="register" index="3" bigendian="true" delay="0" size="2" wordsize="2" physical="true"/>
+<space name="nbseg" index="3" bigendian="true" delay="1" size="2" wordsize="2" physical="true"/>
+<space name="register" index="4" bigendian="true" delay="0" size="2" wordsize="2" physical="true"/>
 </spaces>
-<symbol_table scopesize="28" symbolsize="86">
+<symbol_table scopesize="28" symbolsize="77">
 <scope id="0x0" parent="0x0"/>
 <scope id="0x1" parent="0x0"/>
 <scope id="0x2" parent="0x0"/>
@@ -45,84 +46,75 @@
 <varnode_sym_head name="r6" id="0x9" scope="0x0"/>
 <varnode_sym_head name="r7" id="0xa" scope="0x0"/>
 <varnode_sym_head name="IC" id="0xb" scope="0x0"/>
-<varnode_sym_head name="SR" id="0xc" scope="0x0"/>
-<varnode_sym_head name="KB" id="0xd" scope="0x0"/>
-<varnode_sym_head name="SP" id="0xe" scope="0x0"/>
-<varnode_sym_head name="r0_" id="0xf" scope="0x0"/>
-<varnode_sym_head name="r1_" id="0x10" scope="0x0"/>
-<varnode_sym_head name="r2_" id="0x11" scope="0x0"/>
-<varnode_sym_head name="r3_" id="0x12" scope="0x0"/>
-<varnode_sym_head name="r4_" id="0x13" scope="0x0"/>
-<varnode_sym_head name="r5_" id="0x14" scope="0x0"/>
-<varnode_sym_head name="r6_" id="0x15" scope="0x0"/>
-<varnode_sym_head name="r7_" id="0x16" scope="0x0"/>
-<value_sym_head name="op" id="0x17" scope="0x0"/>
-<value_sym_head name="opextA" id="0x18" scope="0x0"/>
-<value_sym_head name="opextKA2" id="0x19" scope="0x0"/>
-<value_sym_head name="opextBC" id="0x1a" scope="0x0"/>
-<value_sym_head name="opextD" id="0x1b" scope="0x0"/>
-<value_sym_head name="d" id="0x1c" scope="0x0"/>
-<varlist_sym_head name="regA" id="0x1d" scope="0x0"/>
-<varlist_sym_head name="regB" id="0x1e" scope="0x0"/>
-<varlist_sym_head name="regC" id="0x1f" scope="0x0"/>
-<value_sym_head name="t" id="0x20" scope="0x0"/>
-<value_sym_head name="tu" id="0x21" scope="0x0"/>
-<value_sym_head name="tsign" id="0x22" scope="0x0"/>
-<value_sym_head name="b" id="0x23" scope="0x0"/>
-<value_sym_head name="imm16" id="0x24" scope="0x0"/>
-<userop_head name="halt" id="0x25" scope="0x0"/>
-<userop_head name="exl" id="0x26" scope="0x0"/>
-<subtable_sym_head name="imm8" id="0x27" scope="0x0"/>
-<operand_sym_head name="b" id="0x28" scope="0x1"/>
-<subtable_sym_head name="imm7u" id="0x29" scope="0x0"/>
-<operand_sym_head name="val" id="0x2a" scope="0x2"/>
-<operand_sym_head name="tsign" id="0x2b" scope="0x2"/>
-<operand_sym_head name="tu" id="0x2c" scope="0x2"/>
-<subtable_sym_head name="rel7" id="0x2d" scope="0x0"/>
-<operand_sym_head name="loc" id="0x2e" scope="0x3"/>
-<operand_sym_head name="t" id="0x2f" scope="0x3"/>
-<operand_sym_head name="loc" id="0x30" scope="0x4"/>
-<operand_sym_head name="t" id="0x31" scope="0x4"/>
-<subtable_sym_head name="addr16" id="0x32" scope="0x0"/>
-<operand_sym_head name="imm16" id="0x33" scope="0x5"/>
-<subtable_sym_head name="norm" id="0x34" scope="0x0"/>
-<operand_sym_head name="regC" id="0x35" scope="0x6"/>
-<operand_sym_head name="regC" id="0x36" scope="0x7"/>
-<operand_sym_head name="regB" id="0x37" scope="0x7"/>
-<operand_sym_head name="imm16" id="0x38" scope="0x8"/>
-<operand_sym_head name="regB" id="0x39" scope="0x9"/>
-<operand_sym_head name="imm16" id="0x3a" scope="0x9"/>
-<operand_sym_head name="regC" id="0x3b" scope="0xa"/>
-<operand_sym_head name="regC" id="0x3c" scope="0xb"/>
-<operand_sym_head name="regB" id="0x3d" scope="0xb"/>
-<operand_sym_head name="addr16" id="0x3e" scope="0xc"/>
-<operand_sym_head name="regB" id="0x3f" scope="0xd"/>
-<operand_sym_head name="imm16" id="0x40" scope="0xd"/>
-<subtable_sym_head name="normaddr" id="0x41" scope="0x0"/>
-<operand_sym_head name="regC" id="0x42" scope="0xe"/>
-<operand_sym_head name="regC" id="0x43" scope="0xf"/>
-<operand_sym_head name="regB" id="0x44" scope="0xf"/>
-<operand_sym_head name="addr16" id="0x45" scope="0x10"/>
-<operand_sym_head name="regB" id="0x46" scope="0x11"/>
-<operand_sym_head name="imm16" id="0x47" scope="0x11"/>
-<operand_sym_head name="regC" id="0x48" scope="0x12"/>
-<operand_sym_head name="regC" id="0x49" scope="0x13"/>
-<operand_sym_head name="regB" id="0x4a" scope="0x13"/>
-<operand_sym_head name="addr16" id="0x4b" scope="0x14"/>
-<operand_sym_head name="regB" id="0x4c" scope="0x15"/>
-<operand_sym_head name="imm16" id="0x4d" scope="0x15"/>
-<operand_sym_head name="regA" id="0x4e" scope="0x16"/>
-<operand_sym_head name="norm" id="0x4f" scope="0x16"/>
-<operand_sym_head name="regA" id="0x50" scope="0x17"/>
-<operand_sym_head name="norm" id="0x51" scope="0x17"/>
-<operand_sym_head name="normaddr" id="0x52" scope="0x18"/>
-<operand_sym_head name="rel7" id="0x53" scope="0x19"/>
-<operand_sym_head name="imm7u" id="0x54" scope="0x1a"/>
-<operand_sym_head name="imm8" id="0x55" scope="0x1b"/>
+<varnode_sym_head name="SP" id="0xc" scope="0x0"/>
+<varnode_sym_head name="NB" id="0xd" scope="0x0"/>
+<value_sym_head name="op" id="0xe" scope="0x0"/>
+<value_sym_head name="opextA" id="0xf" scope="0x0"/>
+<value_sym_head name="opextKA2" id="0x10" scope="0x0"/>
+<value_sym_head name="opextBC" id="0x11" scope="0x0"/>
+<value_sym_head name="opextD" id="0x12" scope="0x0"/>
+<value_sym_head name="d" id="0x13" scope="0x0"/>
+<varlist_sym_head name="regA" id="0x14" scope="0x0"/>
+<varlist_sym_head name="regB" id="0x15" scope="0x0"/>
+<varlist_sym_head name="regC" id="0x16" scope="0x0"/>
+<value_sym_head name="t" id="0x17" scope="0x0"/>
+<value_sym_head name="tu" id="0x18" scope="0x0"/>
+<value_sym_head name="tsign" id="0x19" scope="0x0"/>
+<value_sym_head name="b" id="0x1a" scope="0x0"/>
+<value_sym_head name="imm16" id="0x1b" scope="0x0"/>
+<userop_head name="halt" id="0x1c" scope="0x0"/>
+<userop_head name="exl" id="0x1d" scope="0x0"/>
+<subtable_sym_head name="imm8" id="0x1e" scope="0x0"/>
+<operand_sym_head name="b" id="0x1f" scope="0x1"/>
+<subtable_sym_head name="imm7u" id="0x20" scope="0x0"/>
+<operand_sym_head name="val" id="0x21" scope="0x2"/>
+<operand_sym_head name="tsign" id="0x22" scope="0x2"/>
+<operand_sym_head name="tu" id="0x23" scope="0x2"/>
+<subtable_sym_head name="rel7" id="0x24" scope="0x0"/>
+<operand_sym_head name="loc" id="0x25" scope="0x3"/>
+<operand_sym_head name="t" id="0x26" scope="0x3"/>
+<operand_sym_head name="loc" id="0x27" scope="0x4"/>
+<operand_sym_head name="t" id="0x28" scope="0x4"/>
+<subtable_sym_head name="addr16" id="0x29" scope="0x0"/>
+<operand_sym_head name="imm16" id="0x2a" scope="0x5"/>
+<subtable_sym_head name="norm" id="0x2b" scope="0x0"/>
+<operand_sym_head name="regC" id="0x2c" scope="0x6"/>
+<operand_sym_head name="regC" id="0x2d" scope="0x7"/>
+<operand_sym_head name="regB" id="0x2e" scope="0x7"/>
+<operand_sym_head name="imm16" id="0x2f" scope="0x8"/>
+<operand_sym_head name="regB" id="0x30" scope="0x9"/>
+<operand_sym_head name="imm16" id="0x31" scope="0x9"/>
+<operand_sym_head name="regC" id="0x32" scope="0xa"/>
+<operand_sym_head name="regC" id="0x33" scope="0xb"/>
+<operand_sym_head name="regB" id="0x34" scope="0xb"/>
+<operand_sym_head name="addr16" id="0x35" scope="0xc"/>
+<operand_sym_head name="regB" id="0x36" scope="0xd"/>
+<operand_sym_head name="imm16" id="0x37" scope="0xd"/>
+<subtable_sym_head name="normaddr" id="0x38" scope="0x0"/>
+<operand_sym_head name="regC" id="0x39" scope="0xe"/>
+<operand_sym_head name="regC" id="0x3a" scope="0xf"/>
+<operand_sym_head name="regB" id="0x3b" scope="0xf"/>
+<operand_sym_head name="addr16" id="0x3c" scope="0x10"/>
+<operand_sym_head name="regB" id="0x3d" scope="0x11"/>
+<operand_sym_head name="imm16" id="0x3e" scope="0x11"/>
+<operand_sym_head name="regC" id="0x3f" scope="0x12"/>
+<operand_sym_head name="regC" id="0x40" scope="0x13"/>
+<operand_sym_head name="regB" id="0x41" scope="0x13"/>
+<operand_sym_head name="addr16" id="0x42" scope="0x14"/>
+<operand_sym_head name="regB" id="0x43" scope="0x15"/>
+<operand_sym_head name="imm16" id="0x44" scope="0x15"/>
+<operand_sym_head name="regA" id="0x45" scope="0x16"/>
+<operand_sym_head name="norm" id="0x46" scope="0x16"/>
+<operand_sym_head name="regA" id="0x47" scope="0x17"/>
+<operand_sym_head name="norm" id="0x48" scope="0x17"/>
+<operand_sym_head name="normaddr" id="0x49" scope="0x18"/>
+<operand_sym_head name="rel7" id="0x4a" scope="0x19"/>
+<operand_sym_head name="imm7u" id="0x4b" scope="0x1a"/>
+<operand_sym_head name="imm8" id="0x4c" scope="0x1b"/>
 <subtable_sym name="instruction" id="0x0" scope="0x0" numct="6">
-<constructor parent="0x0" first="1" length="2" line="100">
-<oper id="0x4e"/>
-<oper id="0x4f"/>
+<constructor parent="0x0" first="1" length="2" line="84">
+<oper id="0x45"/>
+<oper id="0x46"/>
 <print piece="LW"/>
 <print piece=" "/>
 <opprint id="0"/>
@@ -138,9 +130,9 @@
 </op_tpl>
 </construct_tpl>
 </constructor>
-<constructor parent="0x0" first="1" length="2" line="101">
-<oper id="0x50"/>
-<oper id="0x51"/>
+<constructor parent="0x0" first="1" length="2" line="86">
+<oper id="0x47"/>
+<oper id="0x48"/>
 <print piece="AW"/>
 <print piece=" "/>
 <opprint id="0"/>
@@ -157,8 +149,8 @@
 </op_tpl>
 </construct_tpl>
 </constructor>
-<constructor parent="0x0" first="1" length="2" line="102">
-<oper id="0x52"/>
+<constructor parent="0x0" first="1" length="2" line="87">
+<oper id="0x49"/>
 <print piece="UJ"/>
 <print piece=" "/>
 <opprint id="0"/>
@@ -171,8 +163,8 @@
 </op_tpl>
 </construct_tpl>
 </constructor>
-<constructor parent="0x0" first="1" length="2" line="103">
-<oper id="0x53"/>
+<constructor parent="0x0" first="1" length="2" line="88">
+<oper id="0x4a"/>
 <print piece="UJS"/>
 <print piece=" "/>
 <opprint id="0"/>
@@ -185,8 +177,8 @@
 </op_tpl>
 </construct_tpl>
 </constructor>
-<constructor parent="0x0" first="1" length="2" line="104">
-<oper id="0x54"/>
+<constructor parent="0x0" first="1" length="2" line="89">
+<oper id="0x4b"/>
 <print piece="HLT"/>
 <print piece=" "/>
 <opprint id="0"/>
@@ -200,8 +192,8 @@
 </op_tpl>
 </construct_tpl>
 </constructor>
-<constructor parent="0x0" first="1" length="2" line="105">
-<oper id="0x55"/>
+<constructor parent="0x0" first="1" length="2" line="90">
+<oper id="0x4c"/>
 <print piece="EXL"/>
 <print piece=" "/>
 <opprint id="0"/>
@@ -344,47 +336,29 @@
 </varnode_sym>
 <varnode_sym name="IC" id="0xb" scope="0x0" space="register" offset="0x10" size="2">
 </varnode_sym>
-<varnode_sym name="SR" id="0xc" scope="0x0" space="register" offset="0x12" size="2">
+<varnode_sym name="SP" id="0xc" scope="0x0" space="register" offset="0x12" size="2">
 </varnode_sym>
-<varnode_sym name="KB" id="0xd" scope="0x0" space="register" offset="0x14" size="2">
+<varnode_sym name="NB" id="0xd" scope="0x0" space="register" offset="0x14" size="2">
 </varnode_sym>
-<varnode_sym name="SP" id="0xe" scope="0x0" space="register" offset="0x16" size="2">
-</varnode_sym>
-<varnode_sym name="r0_" id="0xf" scope="0x0" space="register" offset="0x20" size="2">
-</varnode_sym>
-<varnode_sym name="r1_" id="0x10" scope="0x0" space="register" offset="0x22" size="2">
-</varnode_sym>
-<varnode_sym name="r2_" id="0x11" scope="0x0" space="register" offset="0x24" size="2">
-</varnode_sym>
-<varnode_sym name="r3_" id="0x12" scope="0x0" space="register" offset="0x26" size="2">
-</varnode_sym>
-<varnode_sym name="r4_" id="0x13" scope="0x0" space="register" offset="0x28" size="2">
-</varnode_sym>
-<varnode_sym name="r5_" id="0x14" scope="0x0" space="register" offset="0x2a" size="2">
-</varnode_sym>
-<varnode_sym name="r6_" id="0x15" scope="0x0" space="register" offset="0x2c" size="2">
-</varnode_sym>
-<varnode_sym name="r7_" id="0x16" scope="0x0" space="register" offset="0x2e" size="2">
-</varnode_sym>
-<value_sym name="op" id="0x17" scope="0x0">
+<value_sym name="op" id="0xe" scope="0x0">
 <tokenfield bigendian="true" signbit="false" bitstart="10" bitend="15" bytestart="0" byteend="0" shift="2"/>
 </value_sym>
-<value_sym name="opextA" id="0x18" scope="0x0">
+<value_sym name="opextA" id="0xf" scope="0x0">
 <tokenfield bigendian="true" signbit="false" bitstart="6" bitend="8" bytestart="0" byteend="1" shift="6"/>
 </value_sym>
-<value_sym name="opextKA2" id="0x19" scope="0x0">
+<value_sym name="opextKA2" id="0x10" scope="0x0">
 <tokenfield bigendian="true" signbit="false" bitstart="8" bitend="9" bytestart="0" byteend="0" shift="0"/>
 </value_sym>
-<value_sym name="opextBC" id="0x1a" scope="0x0">
+<value_sym name="opextBC" id="0x11" scope="0x0">
 <tokenfield bigendian="true" signbit="false" bitstart="0" bitend="5" bytestart="1" byteend="1" shift="0"/>
 </value_sym>
-<value_sym name="opextD" id="0x1b" scope="0x0">
+<value_sym name="opextD" id="0x12" scope="0x0">
 <tokenfield bigendian="true" signbit="false" bitstart="9" bitend="9" bytestart="0" byteend="0" shift="1"/>
 </value_sym>
-<value_sym name="d" id="0x1c" scope="0x0">
+<value_sym name="d" id="0x13" scope="0x0">
 <tokenfield bigendian="true" signbit="false" bitstart="9" bitend="9" bytestart="0" byteend="0" shift="1"/>
 </value_sym>
-<varlist_sym name="regA" id="0x1d" scope="0x0">
+<varlist_sym name="regA" id="0x14" scope="0x0">
 <tokenfield bigendian="true" signbit="false" bitstart="6" bitend="8" bytestart="0" byteend="1" shift="6"/>
 <var id="0x3"/>
 <var id="0x4"/>
@@ -395,7 +369,7 @@
 <var id="0x9"/>
 <var id="0xa"/>
 </varlist_sym>
-<varlist_sym name="regB" id="0x1e" scope="0x0">
+<varlist_sym name="regB" id="0x15" scope="0x0">
 <tokenfield bigendian="true" signbit="false" bitstart="3" bitend="5" bytestart="1" byteend="1" shift="3"/>
 <var id="0x3"/>
 <var id="0x4"/>
@@ -406,7 +380,7 @@
 <var id="0x9"/>
 <var id="0xa"/>
 </varlist_sym>
-<varlist_sym name="regC" id="0x1f" scope="0x0">
+<varlist_sym name="regC" id="0x16" scope="0x0">
 <tokenfield bigendian="true" signbit="false" bitstart="0" bitend="2" bytestart="1" byteend="1" shift="0"/>
 <var id="0x3"/>
 <var id="0x4"/>
@@ -417,26 +391,26 @@
 <var id="0x9"/>
 <var id="0xa"/>
 </varlist_sym>
-<value_sym name="t" id="0x20" scope="0x0">
+<value_sym name="t" id="0x17" scope="0x0">
 <tokenfield bigendian="true" signbit="true" bitstart="0" bitend="5" bytestart="1" byteend="1" shift="0"/>
 </value_sym>
-<value_sym name="tu" id="0x21" scope="0x0">
+<value_sym name="tu" id="0x18" scope="0x0">
 <tokenfield bigendian="true" signbit="false" bitstart="0" bitend="5" bytestart="1" byteend="1" shift="0"/>
 </value_sym>
-<value_sym name="tsign" id="0x22" scope="0x0">
+<value_sym name="tsign" id="0x19" scope="0x0">
 <tokenfield bigendian="true" signbit="false" bitstart="9" bitend="9" bytestart="0" byteend="0" shift="1"/>
 </value_sym>
-<value_sym name="b" id="0x23" scope="0x0">
+<value_sym name="b" id="0x1a" scope="0x0">
 <tokenfield bigendian="true" signbit="false" bitstart="0" bitend="7" bytestart="1" byteend="1" shift="0"/>
 </value_sym>
-<value_sym name="imm16" id="0x24" scope="0x0">
+<value_sym name="imm16" id="0x1b" scope="0x0">
 <tokenfield bigendian="true" signbit="false" bitstart="0" bitend="15" bytestart="0" byteend="1" shift="0"/>
 </value_sym>
-<userop name="halt" id="0x25" scope="0x0" index="0"/>
-<userop name="exl" id="0x26" scope="0x0" index="1"/>
-<subtable_sym name="imm8" id="0x27" scope="0x0" numct="1">
-<constructor parent="0x27" first="1" length="2" line="69">
-<oper id="0x28"/>
+<userop name="halt" id="0x1c" scope="0x0" index="0"/>
+<userop name="exl" id="0x1d" scope="0x0" index="1"/>
+<subtable_sym name="imm8" id="0x1e" scope="0x0" numct="1">
+<constructor parent="0x1e" first="1" length="2" line="48">
+<oper id="0x1f"/>
 <opprint id="0"/>
 <construct_tpl>
 <handle_tpl><const_tpl type="spaceid" name="unique"/><const_tpl type="real" val="0x1"/><const_tpl type="real" val="0x0"/><const_tpl type="real" val="0x0"/><const_tpl type="real" val="0x0"/><const_tpl type="real" val="0x0"/><const_tpl type="real" val="0x0"/></handle_tpl>
@@ -454,15 +428,15 @@
 </pair>
 </decision>
 </subtable_sym>
-<operand_sym name="b" id="0x28" scope="0x1" off="0" base="-1" minlen="2" index="0">
-<operand_exp index="0" table="0x27" ct="0x0"/>
+<operand_sym name="b" id="0x1f" scope="0x1" off="0" base="-1" minlen="2" index="0">
+<operand_exp index="0" table="0x1e" ct="0x0"/>
 <tokenfield bigendian="true" signbit="false" bitstart="0" bitend="7" bytestart="1" byteend="1" shift="0"/>
 </operand_sym>
-<subtable_sym name="imm7u" id="0x29" scope="0x0" numct="1">
-<constructor parent="0x29" first="1" length="2" line="71">
-<oper id="0x2b"/>
-<oper id="0x2c"/>
-<oper id="0x2a"/>
+<subtable_sym name="imm7u" id="0x20" scope="0x0" numct="1">
+<constructor parent="0x20" first="1" length="2" line="52">
+<oper id="0x22"/>
+<oper id="0x23"/>
+<oper id="0x21"/>
 <opprint id="2"/>
 <construct_tpl>
 <handle_tpl><const_tpl type="spaceid" name="unique"/><const_tpl type="real" val="0x2"/><const_tpl type="real" val="0x0"/><const_tpl type="real" val="0x10"/><const_tpl type="real" val="0x0"/><const_tpl type="real" val="0x0"/><const_tpl type="real" val="0x0"/></handle_tpl>
@@ -480,36 +454,36 @@
 </pair>
 </decision>
 </subtable_sym>
-<operand_sym name="val" id="0x2a" scope="0x2" off="0" base="-1" minlen="0" index="2">
-<operand_exp index="2" table="0x29" ct="0x0"/>
+<operand_sym name="val" id="0x21" scope="0x2" off="0" base="-1" minlen="0" index="2">
+<operand_exp index="2" table="0x20" ct="0x0"/>
 <or_exp>
-<operand_exp index="1" table="0x29" ct="0x0"/>
+<operand_exp index="1" table="0x20" ct="0x0"/>
 <lshift_exp>
-<operand_exp index="0" table="0x29" ct="0x0"/>
+<operand_exp index="0" table="0x20" ct="0x0"/>
 <intb val="6"/>
 </lshift_exp>
 </or_exp>
 </operand_sym>
-<operand_sym name="tsign" id="0x2b" scope="0x2" off="0" base="-1" minlen="2" index="0">
-<operand_exp index="0" table="0x29" ct="0x0"/>
+<operand_sym name="tsign" id="0x22" scope="0x2" off="0" base="-1" minlen="2" index="0">
+<operand_exp index="0" table="0x20" ct="0x0"/>
 <tokenfield bigendian="true" signbit="false" bitstart="9" bitend="9" bytestart="0" byteend="0" shift="1"/>
 </operand_sym>
-<operand_sym name="tu" id="0x2c" scope="0x2" off="0" base="-1" minlen="2" index="1">
-<operand_exp index="1" table="0x29" ct="0x0"/>
+<operand_sym name="tu" id="0x23" scope="0x2" off="0" base="-1" minlen="2" index="1">
+<operand_exp index="1" table="0x20" ct="0x0"/>
 <tokenfield bigendian="true" signbit="false" bitstart="0" bitend="5" bytestart="1" byteend="1" shift="0"/>
 </operand_sym>
-<subtable_sym name="rel7" id="0x2d" scope="0x0" numct="2">
-<constructor parent="0x2d" first="1" length="2" line="75">
-<oper id="0x2f"/>
-<oper id="0x2e"/>
+<subtable_sym name="rel7" id="0x24" scope="0x0" numct="2">
+<constructor parent="0x24" first="1" length="2" line="57">
+<oper id="0x26"/>
+<oper id="0x25"/>
 <opprint id="1"/>
 <construct_tpl>
 <handle_tpl><const_tpl type="spaceid" name="ram"/><const_tpl type="real" val="0x2"/><const_tpl type="handle" val="1" s="space"/><const_tpl type="handle" val="1" s="offset"/><const_tpl type="real" val="0x0"/><const_tpl type="spaceid" name="unique"/><const_tpl type="real" val="0x50"/></handle_tpl>
 </construct_tpl>
 </constructor>
-<constructor parent="0x2d" first="1" length="2" line="76">
-<oper id="0x31"/>
-<oper id="0x30"/>
+<constructor parent="0x24" first="1" length="2" line="58">
+<oper id="0x28"/>
+<oper id="0x27"/>
 <opprint id="1"/>
 <construct_tpl>
 <handle_tpl><const_tpl type="spaceid" name="ram"/><const_tpl type="real" val="0x2"/><const_tpl type="handle" val="1" s="space"/><const_tpl type="handle" val="1" s="offset"/><const_tpl type="real" val="0x0"/><const_tpl type="spaceid" name="unique"/><const_tpl type="real" val="0x60"/></handle_tpl>
@@ -536,29 +510,29 @@
 </decision>
 </decision>
 </subtable_sym>
-<operand_sym name="loc" id="0x2e" scope="0x3" off="0" base="-1" minlen="0" index="1">
-<operand_exp index="1" table="0x2d" ct="0x0"/>
+<operand_sym name="loc" id="0x25" scope="0x3" off="0" base="-1" minlen="0" index="1">
+<operand_exp index="1" table="0x24" ct="0x0"/>
 <plus_exp>
-<end_exp/><operand_exp index="0" table="0x2d" ct="0x0"/>
+<end_exp/><operand_exp index="0" table="0x24" ct="0x0"/>
 </plus_exp>
 </operand_sym>
-<operand_sym name="t" id="0x2f" scope="0x3" off="0" base="-1" minlen="2" index="0">
-<operand_exp index="0" table="0x2d" ct="0x0"/>
+<operand_sym name="t" id="0x26" scope="0x3" off="0" base="-1" minlen="2" index="0">
+<operand_exp index="0" table="0x24" ct="0x0"/>
 <tokenfield bigendian="true" signbit="true" bitstart="0" bitend="5" bytestart="1" byteend="1" shift="0"/>
 </operand_sym>
-<operand_sym name="loc" id="0x30" scope="0x4" off="0" base="-1" minlen="0" index="1">
-<operand_exp index="1" table="0x2d" ct="0x1"/>
+<operand_sym name="loc" id="0x27" scope="0x4" off="0" base="-1" minlen="0" index="1">
+<operand_exp index="1" table="0x24" ct="0x1"/>
 <sub_exp>
-<end_exp/><operand_exp index="0" table="0x2d" ct="0x1"/>
+<end_exp/><operand_exp index="0" table="0x24" ct="0x1"/>
 </sub_exp>
 </operand_sym>
-<operand_sym name="t" id="0x31" scope="0x4" off="0" base="-1" minlen="2" index="0">
-<operand_exp index="0" table="0x2d" ct="0x1"/>
+<operand_sym name="t" id="0x28" scope="0x4" off="0" base="-1" minlen="2" index="0">
+<operand_exp index="0" table="0x24" ct="0x1"/>
 <tokenfield bigendian="true" signbit="true" bitstart="0" bitend="5" bytestart="1" byteend="1" shift="0"/>
 </operand_sym>
-<subtable_sym name="addr16" id="0x32" scope="0x0" numct="1">
-<constructor parent="0x32" first="1" length="2" line="78">
-<oper id="0x33"/>
+<subtable_sym name="addr16" id="0x29" scope="0x0" numct="1">
+<constructor parent="0x29" first="1" length="2" line="62">
+<oper id="0x2a"/>
 <opprint id="0"/>
 <construct_tpl>
 <handle_tpl><const_tpl type="spaceid" name="ram"/><const_tpl type="real" val="0x2"/><const_tpl type="handle" val="0" s="space"/><const_tpl type="handle" val="0" s="offset"/><const_tpl type="real" val="0x0"/><const_tpl type="spaceid" name="unique"/><const_tpl type="real" val="0x70"/></handle_tpl>
@@ -573,21 +547,21 @@
 </pair>
 </decision>
 </subtable_sym>
-<operand_sym name="imm16" id="0x33" scope="0x5" off="0" base="-1" minlen="2" index="0">
-<operand_exp index="0" table="0x32" ct="0x0"/>
+<operand_sym name="imm16" id="0x2a" scope="0x5" off="0" base="-1" minlen="2" index="0">
+<operand_exp index="0" table="0x29" ct="0x0"/>
 <tokenfield bigendian="true" signbit="false" bitstart="0" bitend="15" bytestart="0" byteend="1" shift="0"/>
 </operand_sym>
-<subtable_sym name="norm" id="0x34" scope="0x0" numct="8">
-<constructor parent="0x34" first="1" length="2" line="80">
-<oper id="0x35"/>
+<subtable_sym name="norm" id="0x2b" scope="0x0" numct="8">
+<constructor parent="0x2b" first="1" length="2" line="64">
+<oper id="0x2c"/>
 <opprint id="0"/>
 <construct_tpl>
 <handle_tpl><const_tpl type="handle" val="0" s="space"/><const_tpl type="handle" val="0" s="size"/><const_tpl type="real" val="0x0"/><const_tpl type="handle" val="0" s="offset"/><const_tpl type="real" val="0x0"/><const_tpl type="real" val="0x0"/><const_tpl type="real" val="0x0"/></handle_tpl>
 </construct_tpl>
 </constructor>
-<constructor parent="0x34" first="3" length="2" line="81">
-<oper id="0x36"/>
-<oper id="0x37"/>
+<constructor parent="0x2b" first="3" length="2" line="65">
+<oper id="0x2d"/>
+<oper id="0x2e"/>
 <opprint id="0"/>
 <print piece="+"/>
 <opprint id="1"/>
@@ -599,8 +573,8 @@
 </op_tpl>
 </construct_tpl>
 </constructor>
-<constructor parent="0x34" first="1" length="4" line="82">
-<oper id="0x38"/>
+<constructor parent="0x2b" first="1" length="4" line="66">
+<oper id="0x2f"/>
 <opprint id="0"/>
 <construct_tpl>
 <handle_tpl><const_tpl type="spaceid" name="unique"/><const_tpl type="real" val="0x2"/><const_tpl type="real" val="0x0"/><const_tpl type="real" val="0xa0"/><const_tpl type="real" val="0x0"/><const_tpl type="real" val="0x0"/><const_tpl type="real" val="0x0"/></handle_tpl>
@@ -609,9 +583,9 @@
 </op_tpl>
 </construct_tpl>
 </constructor>
-<constructor parent="0x34" first="3" length="4" line="83">
-<oper id="0x39"/>
-<oper id="0x3a"/>
+<constructor parent="0x2b" first="3" length="4" line="67">
+<oper id="0x30"/>
+<oper id="0x31"/>
 <opprint id="0"/>
 <print piece="+"/>
 <opprint id="1"/>
@@ -623,8 +597,8 @@
 </op_tpl>
 </construct_tpl>
 </constructor>
-<constructor parent="0x34" first="3" length="2" line="84">
-<oper id="0x3b"/>
+<constructor parent="0x2b" first="3" length="2" line="68">
+<oper id="0x32"/>
 <print piece="["/>
 <opprint id="0"/>
 <print piece="]"/>
@@ -632,9 +606,9 @@
 <handle_tpl><const_tpl type="spaceid" name="ram"/><const_tpl type="real" val="0x0"/><const_tpl type="handle" val="0" s="space"/><const_tpl type="handle" val="0" s="offset"/><const_tpl type="handle" val="0" s="size"/><const_tpl type="spaceid" name="unique"/><const_tpl type="real" val="0xd0"/></handle_tpl>
 </construct_tpl>
 </constructor>
-<constructor parent="0x34" first="5" length="2" line="85">
-<oper id="0x3c"/>
-<oper id="0x3d"/>
+<constructor parent="0x2b" first="5" length="2" line="69">
+<oper id="0x33"/>
+<oper id="0x34"/>
 <print piece="["/>
 <opprint id="0"/>
 <print piece="+"/>
@@ -648,8 +622,8 @@
 </op_tpl>
 </construct_tpl>
 </constructor>
-<constructor parent="0x34" first="3" length="4" line="86">
-<oper id="0x3e"/>
+<constructor parent="0x2b" first="3" length="4" line="70">
+<oper id="0x35"/>
 <print piece="["/>
 <opprint id="0"/>
 <print piece="]"/>
@@ -660,9 +634,9 @@
 </op_tpl>
 </construct_tpl>
 </constructor>
-<constructor parent="0x34" first="5" length="4" line="87">
-<oper id="0x3f"/>
-<oper id="0x40"/>
+<constructor parent="0x2b" first="5" length="4" line="71">
+<oper id="0x36"/>
+<oper id="0x37"/>
 <print piece="["/>
 <opprint id="0"/>
 <print piece="+"/>
@@ -739,56 +713,56 @@
 </decision>
 </decision>
 </subtable_sym>
-<operand_sym name="regC" id="0x35" scope="0x6" subsym="0x1f" off="0" base="-1" minlen="2" index="0">
-<operand_exp index="0" table="0x34" ct="0x0"/>
+<operand_sym name="regC" id="0x2c" scope="0x6" subsym="0x16" off="0" base="-1" minlen="2" index="0">
+<operand_exp index="0" table="0x2b" ct="0x0"/>
 </operand_sym>
-<operand_sym name="regC" id="0x36" scope="0x7" subsym="0x1f" off="0" base="-1" minlen="2" index="0">
-<operand_exp index="0" table="0x34" ct="0x1"/>
+<operand_sym name="regC" id="0x2d" scope="0x7" subsym="0x16" off="0" base="-1" minlen="2" index="0">
+<operand_exp index="0" table="0x2b" ct="0x1"/>
 </operand_sym>
-<operand_sym name="regB" id="0x37" scope="0x7" subsym="0x1e" off="0" base="-1" minlen="2" index="1">
-<operand_exp index="1" table="0x34" ct="0x1"/>
+<operand_sym name="regB" id="0x2e" scope="0x7" subsym="0x15" off="0" base="-1" minlen="2" index="1">
+<operand_exp index="1" table="0x2b" ct="0x1"/>
 </operand_sym>
-<operand_sym name="imm16" id="0x38" scope="0x8" off="2" base="-1" minlen="2" index="0">
-<operand_exp index="0" table="0x34" ct="0x2"/>
+<operand_sym name="imm16" id="0x2f" scope="0x8" off="2" base="-1" minlen="2" index="0">
+<operand_exp index="0" table="0x2b" ct="0x2"/>
 <tokenfield bigendian="true" signbit="false" bitstart="0" bitend="15" bytestart="0" byteend="1" shift="0"/>
 </operand_sym>
-<operand_sym name="regB" id="0x39" scope="0x9" subsym="0x1e" off="0" base="-1" minlen="2" index="0">
-<operand_exp index="0" table="0x34" ct="0x3"/>
+<operand_sym name="regB" id="0x30" scope="0x9" subsym="0x15" off="0" base="-1" minlen="2" index="0">
+<operand_exp index="0" table="0x2b" ct="0x3"/>
 </operand_sym>
-<operand_sym name="imm16" id="0x3a" scope="0x9" off="2" base="-1" minlen="2" index="1">
-<operand_exp index="1" table="0x34" ct="0x3"/>
+<operand_sym name="imm16" id="0x31" scope="0x9" off="2" base="-1" minlen="2" index="1">
+<operand_exp index="1" table="0x2b" ct="0x3"/>
 <tokenfield bigendian="true" signbit="false" bitstart="0" bitend="15" bytestart="0" byteend="1" shift="0"/>
 </operand_sym>
-<operand_sym name="regC" id="0x3b" scope="0xa" subsym="0x1f" off="0" base="-1" minlen="2" index="0">
-<operand_exp index="0" table="0x34" ct="0x4"/>
+<operand_sym name="regC" id="0x32" scope="0xa" subsym="0x16" off="0" base="-1" minlen="2" index="0">
+<operand_exp index="0" table="0x2b" ct="0x4"/>
 </operand_sym>
-<operand_sym name="regC" id="0x3c" scope="0xb" subsym="0x1f" off="0" base="-1" minlen="2" index="0">
-<operand_exp index="0" table="0x34" ct="0x5"/>
+<operand_sym name="regC" id="0x33" scope="0xb" subsym="0x16" off="0" base="-1" minlen="2" index="0">
+<operand_exp index="0" table="0x2b" ct="0x5"/>
 </operand_sym>
-<operand_sym name="regB" id="0x3d" scope="0xb" subsym="0x1e" off="0" base="-1" minlen="2" index="1">
-<operand_exp index="1" table="0x34" ct="0x5"/>
+<operand_sym name="regB" id="0x34" scope="0xb" subsym="0x15" off="0" base="-1" minlen="2" index="1">
+<operand_exp index="1" table="0x2b" ct="0x5"/>
 </operand_sym>
-<operand_sym name="addr16" id="0x3e" scope="0xc" subsym="0x32" off="2" base="-1" minlen="2" index="0">
-<operand_exp index="0" table="0x34" ct="0x6"/>
+<operand_sym name="addr16" id="0x35" scope="0xc" subsym="0x29" off="2" base="-1" minlen="2" index="0">
+<operand_exp index="0" table="0x2b" ct="0x6"/>
 </operand_sym>
-<operand_sym name="regB" id="0x3f" scope="0xd" subsym="0x1e" off="0" base="-1" minlen="2" index="0">
-<operand_exp index="0" table="0x34" ct="0x7"/>
+<operand_sym name="regB" id="0x36" scope="0xd" subsym="0x15" off="0" base="-1" minlen="2" index="0">
+<operand_exp index="0" table="0x2b" ct="0x7"/>
 </operand_sym>
-<operand_sym name="imm16" id="0x40" scope="0xd" off="2" base="-1" minlen="2" index="1">
-<operand_exp index="1" table="0x34" ct="0x7"/>
+<operand_sym name="imm16" id="0x37" scope="0xd" off="2" base="-1" minlen="2" index="1">
+<operand_exp index="1" table="0x2b" ct="0x7"/>
 <tokenfield bigendian="true" signbit="false" bitstart="0" bitend="15" bytestart="0" byteend="1" shift="0"/>
 </operand_sym>
-<subtable_sym name="normaddr" id="0x41" scope="0x0" numct="8">
-<constructor parent="0x41" first="1" length="2" line="89">
-<oper id="0x42"/>
+<subtable_sym name="normaddr" id="0x38" scope="0x0" numct="8">
+<constructor parent="0x38" first="1" length="2" line="73">
+<oper id="0x39"/>
 <opprint id="0"/>
 <construct_tpl>
 <handle_tpl><const_tpl type="spaceid" name="ram"/><const_tpl type="real" val="0x2"/><const_tpl type="handle" val="0" s="space"/><const_tpl type="handle" val="0" s="offset"/><const_tpl type="handle" val="0" s="size"/><const_tpl type="spaceid" name="unique"/><const_tpl type="real" val="0x140"/></handle_tpl>
 </construct_tpl>
 </constructor>
-<constructor parent="0x41" first="3" length="2" line="90">
-<oper id="0x43"/>
-<oper id="0x44"/>
+<constructor parent="0x38" first="3" length="2" line="74">
+<oper id="0x3a"/>
+<oper id="0x3b"/>
 <opprint id="0"/>
 <print piece="+"/>
 <opprint id="1"/>
@@ -800,8 +774,8 @@
 </op_tpl>
 </construct_tpl>
 </constructor>
-<constructor parent="0x41" first="1" length="4" line="91">
-<oper id="0x45"/>
+<constructor parent="0x38" first="1" length="4" line="75">
+<oper id="0x3c"/>
 <opprint id="0"/>
 <construct_tpl>
 <handle_tpl><const_tpl type="handle" val="0" s="space"/><const_tpl type="handle" val="0" s="size"/><const_tpl type="real" val="0x0"/><const_tpl type="handle" val="0" s="offset"/><const_tpl type="real" val="0x0"/><const_tpl type="real" val="0x0"/><const_tpl type="real" val="0x0"/></handle_tpl>
@@ -810,9 +784,9 @@
 </op_tpl>
 </construct_tpl>
 </constructor>
-<constructor parent="0x41" first="3" length="4" line="92">
-<oper id="0x46"/>
-<oper id="0x47"/>
+<constructor parent="0x38" first="3" length="4" line="76">
+<oper id="0x3d"/>
+<oper id="0x3e"/>
 <opprint id="0"/>
 <print piece="+"/>
 <opprint id="1"/>
@@ -824,8 +798,8 @@
 </op_tpl>
 </construct_tpl>
 </constructor>
-<constructor parent="0x41" first="3" length="2" line="93">
-<oper id="0x48"/>
+<constructor parent="0x38" first="3" length="2" line="77">
+<oper id="0x3f"/>
 <print piece="["/>
 <opprint id="0"/>
 <print piece="]"/>
@@ -837,9 +811,9 @@
 </op_tpl>
 </construct_tpl>
 </constructor>
-<constructor parent="0x41" first="5" length="2" line="94">
-<oper id="0x49"/>
-<oper id="0x4a"/>
+<constructor parent="0x38" first="5" length="2" line="78">
+<oper id="0x40"/>
+<oper id="0x41"/>
 <print piece="["/>
 <opprint id="0"/>
 <print piece="+"/>
@@ -853,8 +827,8 @@
 </op_tpl>
 </construct_tpl>
 </constructor>
-<constructor parent="0x41" first="3" length="4" line="95">
-<oper id="0x4b"/>
+<constructor parent="0x38" first="3" length="4" line="79">
+<oper id="0x42"/>
 <print piece="["/>
 <opprint id="0"/>
 <print piece="]"/>
@@ -865,9 +839,9 @@
 </op_tpl>
 </construct_tpl>
 </constructor>
-<constructor parent="0x41" first="5" length="4" line="96">
-<oper id="0x4c"/>
-<oper id="0x4d"/>
+<constructor parent="0x38" first="5" length="4" line="80">
+<oper id="0x43"/>
+<oper id="0x44"/>
 <print piece="["/>
 <opprint id="0"/>
 <print piece="+"/>
@@ -944,66 +918,66 @@
 </decision>
 </decision>
 </subtable_sym>
-<operand_sym name="regC" id="0x42" scope="0xe" subsym="0x1f" off="0" base="-1" minlen="2" index="0">
-<operand_exp index="0" table="0x41" ct="0x0"/>
+<operand_sym name="regC" id="0x39" scope="0xe" subsym="0x16" off="0" base="-1" minlen="2" index="0">
+<operand_exp index="0" table="0x38" ct="0x0"/>
 </operand_sym>
-<operand_sym name="regC" id="0x43" scope="0xf" subsym="0x1f" off="0" base="-1" minlen="2" index="0">
-<operand_exp index="0" table="0x41" ct="0x1"/>
+<operand_sym name="regC" id="0x3a" scope="0xf" subsym="0x16" off="0" base="-1" minlen="2" index="0">
+<operand_exp index="0" table="0x38" ct="0x1"/>
 </operand_sym>
-<operand_sym name="regB" id="0x44" scope="0xf" subsym="0x1e" off="0" base="-1" minlen="2" index="1">
-<operand_exp index="1" table="0x41" ct="0x1"/>
+<operand_sym name="regB" id="0x3b" scope="0xf" subsym="0x15" off="0" base="-1" minlen="2" index="1">
+<operand_exp index="1" table="0x38" ct="0x1"/>
 </operand_sym>
-<operand_sym name="addr16" id="0x45" scope="0x10" subsym="0x32" off="2" base="-1" minlen="2" index="0">
-<operand_exp index="0" table="0x41" ct="0x2"/>
+<operand_sym name="addr16" id="0x3c" scope="0x10" subsym="0x29" off="2" base="-1" minlen="2" index="0">
+<operand_exp index="0" table="0x38" ct="0x2"/>
 </operand_sym>
-<operand_sym name="regB" id="0x46" scope="0x11" subsym="0x1e" off="0" base="-1" minlen="2" index="0">
-<operand_exp index="0" table="0x41" ct="0x3"/>
+<operand_sym name="regB" id="0x3d" scope="0x11" subsym="0x15" off="0" base="-1" minlen="2" index="0">
+<operand_exp index="0" table="0x38" ct="0x3"/>
 </operand_sym>
-<operand_sym name="imm16" id="0x47" scope="0x11" off="2" base="-1" minlen="2" index="1">
-<operand_exp index="1" table="0x41" ct="0x3"/>
+<operand_sym name="imm16" id="0x3e" scope="0x11" off="2" base="-1" minlen="2" index="1">
+<operand_exp index="1" table="0x38" ct="0x3"/>
 <tokenfield bigendian="true" signbit="false" bitstart="0" bitend="15" bytestart="0" byteend="1" shift="0"/>
 </operand_sym>
-<operand_sym name="regC" id="0x48" scope="0x12" subsym="0x1f" off="0" base="-1" minlen="2" index="0">
-<operand_exp index="0" table="0x41" ct="0x4"/>
+<operand_sym name="regC" id="0x3f" scope="0x12" subsym="0x16" off="0" base="-1" minlen="2" index="0">
+<operand_exp index="0" table="0x38" ct="0x4"/>
 </operand_sym>
-<operand_sym name="regC" id="0x49" scope="0x13" subsym="0x1f" off="0" base="-1" minlen="2" index="0">
-<operand_exp index="0" table="0x41" ct="0x5"/>
+<operand_sym name="regC" id="0x40" scope="0x13" subsym="0x16" off="0" base="-1" minlen="2" index="0">
+<operand_exp index="0" table="0x38" ct="0x5"/>
 </operand_sym>
-<operand_sym name="regB" id="0x4a" scope="0x13" subsym="0x1e" off="0" base="-1" minlen="2" index="1">
-<operand_exp index="1" table="0x41" ct="0x5"/>
+<operand_sym name="regB" id="0x41" scope="0x13" subsym="0x15" off="0" base="-1" minlen="2" index="1">
+<operand_exp index="1" table="0x38" ct="0x5"/>
 </operand_sym>
-<operand_sym name="addr16" id="0x4b" scope="0x14" subsym="0x32" off="2" base="-1" minlen="2" index="0">
-<operand_exp index="0" table="0x41" ct="0x6"/>
+<operand_sym name="addr16" id="0x42" scope="0x14" subsym="0x29" off="2" base="-1" minlen="2" index="0">
+<operand_exp index="0" table="0x38" ct="0x6"/>
 </operand_sym>
-<operand_sym name="regB" id="0x4c" scope="0x15" subsym="0x1e" off="0" base="-1" minlen="2" index="0">
-<operand_exp index="0" table="0x41" ct="0x7"/>
+<operand_sym name="regB" id="0x43" scope="0x15" subsym="0x15" off="0" base="-1" minlen="2" index="0">
+<operand_exp index="0" table="0x38" ct="0x7"/>
 </operand_sym>
-<operand_sym name="imm16" id="0x4d" scope="0x15" off="2" base="-1" minlen="2" index="1">
-<operand_exp index="1" table="0x41" ct="0x7"/>
+<operand_sym name="imm16" id="0x44" scope="0x15" off="2" base="-1" minlen="2" index="1">
+<operand_exp index="1" table="0x38" ct="0x7"/>
 <tokenfield bigendian="true" signbit="false" bitstart="0" bitend="15" bytestart="0" byteend="1" shift="0"/>
 </operand_sym>
-<operand_sym name="regA" id="0x4e" scope="0x16" subsym="0x1d" off="0" base="-1" minlen="2" index="0">
+<operand_sym name="regA" id="0x45" scope="0x16" subsym="0x14" off="0" base="-1" minlen="2" index="0">
 <operand_exp index="0" table="0x0" ct="0x0"/>
 </operand_sym>
-<operand_sym name="norm" id="0x4f" scope="0x16" subsym="0x34" off="0" base="-1" minlen="2" index="1">
+<operand_sym name="norm" id="0x46" scope="0x16" subsym="0x2b" off="0" base="-1" minlen="2" index="1">
 <operand_exp index="1" table="0x0" ct="0x0"/>
 </operand_sym>
-<operand_sym name="regA" id="0x50" scope="0x17" subsym="0x1d" off="0" base="-1" minlen="2" index="0">
+<operand_sym name="regA" id="0x47" scope="0x17" subsym="0x14" off="0" base="-1" minlen="2" index="0">
 <operand_exp index="0" table="0x0" ct="0x1"/>
 </operand_sym>
-<operand_sym name="norm" id="0x51" scope="0x17" subsym="0x34" off="0" base="-1" minlen="2" index="1">
+<operand_sym name="norm" id="0x48" scope="0x17" subsym="0x2b" off="0" base="-1" minlen="2" index="1">
 <operand_exp index="1" table="0x0" ct="0x1"/>
 </operand_sym>
-<operand_sym name="normaddr" id="0x52" scope="0x18" subsym="0x41" off="0" base="-1" minlen="2" code="true" index="0">
+<operand_sym name="normaddr" id="0x49" scope="0x18" subsym="0x38" off="0" base="-1" minlen="2" code="true" index="0">
 <operand_exp index="0" table="0x0" ct="0x2"/>
 </operand_sym>
-<operand_sym name="rel7" id="0x53" scope="0x19" subsym="0x2d" off="0" base="-1" minlen="2" code="true" index="0">
+<operand_sym name="rel7" id="0x4a" scope="0x19" subsym="0x24" off="0" base="-1" minlen="2" code="true" index="0">
 <operand_exp index="0" table="0x0" ct="0x3"/>
 </operand_sym>
-<operand_sym name="imm7u" id="0x54" scope="0x1a" subsym="0x29" off="0" base="-1" minlen="2" index="0">
+<operand_sym name="imm7u" id="0x4b" scope="0x1a" subsym="0x20" off="0" base="-1" minlen="2" index="0">
 <operand_exp index="0" table="0x0" ct="0x4"/>
 </operand_sym>
-<operand_sym name="imm8" id="0x55" scope="0x1b" subsym="0x27" off="0" base="-1" minlen="2" index="0">
+<operand_sym name="imm8" id="0x4c" scope="0x1b" subsym="0x1e" off="0" base="-1" minlen="2" index="0">
 <operand_exp index="0" table="0x0" ct="0x5"/>
 </operand_sym>
 </symbol_table>

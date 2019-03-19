@@ -3,34 +3,13 @@
 define endian=big;
 define alignment=2;
 
-define space ram      type=ram_space      wordsize=2 size=2  default;
+define space ram type=ram_space wordsize=2 size=2 default;
+define space nbseg type=ram_space wordsize=2 size=2;
 define space register type=register_space wordsize=2 size=2;
 
 define register offset=0 size=2 [ r0 r1 r2 r3 r4 r5 r6 r7 ];
-define register offset=16 size=2 [ IC SR KB SP ];
-define register offset=32 size=2 [ r0_ r1_ r2_ r3_ r4_ r5_ r6_ r7_ ];
-
-#define bitrange fZ=r0[15,1]
-#                fM=r0[14,1]
-#                fV=r0[13,1]
-#                fC=r0[12,1]
-#                fL=r0[11,1]
-#                fE=r0[10,1]
-#                fG=r0[9,1]
-#                fY=r0[8,1]
-#                fX=r0[7,1]
-#		f1=r0[6,1]
-#		f2=r0[5,1]
-#		f3=r0[4,1]
-#		f4=r0[3,1]
-#		f5=r0[2,1]
-#		f6=r0[1,1]
-#		f7=r0[0,1];
-#
-#define bitrange RM=SR[6,10]
-#		Q=SR[5,1]
-#		BS=SR[4,1]
-#		NB=SR[0,4];
+# there is no SP in MERA-400, but stack analysis fails without it
+define register offset=16 size=2 [ IC SP NB ];
 
 define token opword (16)
 	op = (10,15)
@@ -59,21 +38,26 @@ define token data16 (16)
 
 attach variables [ regA regB regC ] [ r0 r1 r2 r3 r4 r5 r6 r7 ];
 
-# ------------------------------------------------------------------------
+# --- p-code operations --------------------------------------------------
 
 define pcodeop halt;
 define pcodeop exl;
 
-# ------------------------------------------------------------------------
+# --- 8-bit argument -----------------------------------------------------
 
 imm8: b is b { val:1 = b; export val; }
+
+# --- 7-bit argument -----------------------------------------------------
 
 imm7u: val is tsign & tu [ val = tu | tsign<<6; ] { tmp:2 = val; export tmp; }
 
 imm7: t is tsign=0 & t { val:2 = t; export val; }
 imm7: -t is tsign=1 & t { val:2 = -t; export val; }
+
 rel7: loc is tsign=0 & t [ loc = inst_next + t; ] { export *:2 loc; }
 rel7: loc is tsign=1 & t [ loc = inst_next - t; ] { export *:2 loc; }
+
+# --- Normal argument ----------------------------------------------------
 
 addr16: imm16 is imm16 { export *:2 imm16; }
 
@@ -95,9 +79,10 @@ normaddr: [regC+regB] is d=1 & regC & regB { tmp:2 = regB+regC; export *tmp; }
 normaddr: [addr16] is d=1 & regB=0 & regC=0 ; addr16 { export * addr16; }
 normaddr: [regB+imm16] is d=1 & regC=0 & regB; imm16 { tmp:2 = regB + imm16; export *tmp; }
 
-# ------------------------------------------------------------------------
+# --- Instructions -------------------------------------------------------
 
 :LW regA, norm is (op=0x10 & regA) ... & norm { regA = norm; }
+
 :AW regA, norm is (op=0x20 & regA) ... & norm { regA = regA + norm; }
 :UJ normaddr is (op=0x3c) ... & normaddr { goto normaddr; }
 :UJS rel7 is op=0x38 & opextA=0 & rel7 { goto rel7; }

@@ -1,4 +1,4 @@
-SLEIGH=../../../../../support/sleigh
+SLEIGH=sleigh
 PROCESSOR=mera400
 
 $(PROCESSOR): $(PROCESSOR).sla
