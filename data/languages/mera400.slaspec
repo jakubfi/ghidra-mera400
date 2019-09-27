@@ -10,6 +10,7 @@ define space register type=register_space wordsize=2 size=2;
 define register offset=0 size=2 [ r0 r1 r2 r3 r4 r5 r6 r7 ];
 # there is no SP in MERA-400, but stack analysis fails without it
 define register offset=16 size=2 [ IC SP NB ];
+define register offset=32 size=1 [ Z M V C L E G Y X ];
 
 define token opword (16)
 	op = (10,15)
@@ -111,7 +112,7 @@ normad_nb: [regB+imm16] is d=1 & regC=0 & regB; imm16 { tmp:2 = *[nbseg] (regB +
 :RI regA, norm is (op=0x13 & regA) ... & norm { *regA = norm; regA = regA+1; }
 :RW regA, normad is (op=0x14 & regA) ... & normad { *normad = regA; }
 :PW regA, normad_nb is (op=0x15 & regA) ... & normad_nb { *normad_nb = regA; }
-:RJ regA, normad is (op=0x16 & regA) ... & normad { regA = inst_next; goto normad; }
+:RJ regA, normad is (op=0x16 & regA) ... & normad { regA = inst_next; call normad; }
 :IS regA, normad_nb is (op=0x17 & regA) ... & normad_nb { p = (*normad_nb & regA == regA); if (p) goto inst_next; *normad_nb = *normad_nb | regA; }
 :BB regA, norm is (op=0x18 & regA) ... & norm { if ((regA & norm) == norm) goto inst_next; }
 :BM regA, normad_nb is (op=0x19 & regA) ... & normad_nb { if ((regA & *normad_nb) == regA) goto inst_next; }
@@ -157,16 +158,16 @@ normad_nb: [regB+imm16] is d=1 & regC=0 & regB; imm16 { tmp:2 = *[nbseg] (regB +
 :RWS regA, imm7 is op=0x37 & regA & imm7 {  }
 
 :UJS rel7 is op=0x38 & opextA=0 & rel7 { goto rel7; }
-:JLS rel7 is op=0x38 & opextA=1 & rel7 { goto rel7; }
-:JES rel7 is op=0x38 & opextA=2 & rel7 { goto rel7; }
-:JGS rel7 is op=0x38 & opextA=3 & rel7 { goto rel7; }
-:JVS rel7 is op=0x38 & opextA=4 & rel7 { goto rel7; }
-:JXS rel7 is op=0x38 & opextA=5 & rel7 { goto rel7; }
-:JYS rel7 is op=0x38 & opextA=6 & rel7 { goto rel7; }
-:JCS rel7 is op=0x38 & opextA=7 & rel7 { goto rel7; }
+:JLS rel7 is op=0x38 & opextA=1 & rel7 { if (L) goto rel7; }
+:JES rel7 is op=0x38 & opextA=2 & rel7 { if (E) goto rel7; }
+:JGS rel7 is op=0x38 & opextA=3 & rel7 { if (G) goto rel7; }
+:JVS rel7 is op=0x38 & opextA=4 & rel7 { if (V) goto rel7; }
+:JXS rel7 is op=0x38 & opextA=5 & rel7 { if (X) goto rel7; }
+:JYS rel7 is op=0x38 & opextA=6 & rel7 { if (Y) goto rel7; }
+:JCS rel7 is op=0x38 & opextA=7 & rel7 { if (C) goto rel7; }
 
-:BLC imm8 is op=0x39 & opextKA2=0 & imm8 { exl(imm8); }
-:EXL imm8 is op=0x39 & opextKA2=1 & imm8 {  }
+:BLC imm8 is op=0x39 & opextKA2=0 & imm8 {  }
+:EXL imm8 is op=0x39 & opextKA2=1 & imm8 { exl(imm8); }
 :BRC imm8 is op=0x39 & opextKA2=2 & imm8 {  }
 :NRF imm8 is op=0x39 & opextKA2=3 & imm8 { nrf(imm8); }
 
@@ -207,13 +208,13 @@ normad_nb: [regB+imm16] is d=1 & regC=0 & regB; imm16 { tmp:2 = *[nbseg] (regB +
 :SIND is op=0x3b & opextA=2 & opextC=4 & opextD=1 {  }
 
 :UJ normad is (op=0x3c & opextA=0) ... & normad { goto normad; }
-:JL normad is (op=0x3c & opextA=1) ... & normad { goto normad; }
-:JE normad is (op=0x3c & opextA=2) ... & normad { goto normad; }
-:JG normad is (op=0x3c & opextA=3) ... & normad { goto normad; }
-:JZ normad is (op=0x3c & opextA=4) ... & normad { goto normad; }
-:JM normad is (op=0x3c & opextA=5) ... & normad { goto normad; }
-:JN normad is (op=0x3c & opextA=6) ... & normad { goto normad; }
-:LJ normad is (op=0x3c & opextA=7) ... & normad { goto normad; }
+:JL normad is (op=0x3c & opextA=1) ... & normad { if (L) goto normad; }
+:JE normad is (op=0x3c & opextA=2) ... & normad { if (E) goto normad; }
+:JG normad is (op=0x3c & opextA=3) ... & normad { if (G) goto normad; }
+:JZ normad is (op=0x3c & opextA=4) ... & normad { if (Z) goto normad; }
+:JM normad is (op=0x3c & opextA=5) ... & normad { if (M) goto normad; }
+:JN normad is (op=0x3c & opextA=6) ... & normad { if (~E) goto normad; }
+:LJ normad is (op=0x3c & opextA=7) ... & normad { call normad; }
 
 :LD normad_nb is (op=0x3d & opextA=0) ... & normad_nb {  }
 :LF normad_nb is (op=0x3d & opextA=1) ... & normad_nb {  }
