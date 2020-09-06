@@ -216,19 +216,19 @@ normad_nb: [regB+imm16] is d=1 & regC=0 & regB; imm16 { tmp:2 = *[nbseg] (regB +
 :JN normad is (op=0x3c & opextA=6) ... & normad { if (~E) goto normad; }
 :LJ normad is (op=0x3c & opextA=7) ... & normad { call normad; }
 
-:LD normad_nb is (op=0x3d & opextA=0) ... & normad_nb {  }
-:LF normad_nb is (op=0x3d & opextA=1) ... & normad_nb {  }
-:LA normad_nb is (op=0x3d & opextA=2) ... & normad_nb {  }
-:LL normad_nb is (op=0x3d & opextA=3) ... & normad_nb {  }
+:LD normad is (op=0x3d & opextA=0) ... & normad {  }
+:LF normad is (op=0x3d & opextA=1) ... & normad {  }
+:LA normad is (op=0x3d & opextA=2) ... & normad {  }
+:LL normad is (op=0x3d & opextA=3) ... & normad {  }
 :TD normad_nb is (op=0x3d & opextA=4) ... & normad_nb {  }
 :TF normad_nb is (op=0x3d & opextA=5) ... & normad_nb {  }
 :TA normad_nb is (op=0x3d & opextA=6) ... & normad_nb {  }
 :TL normad_nb is (op=0x3d & opextA=7) ... & normad_nb {  }
 
-:RD normad_nb is (op=0x3e & opextA=0) ... & normad_nb {  }
-:RF normad_nb is (op=0x3e & opextA=1) ... & normad_nb {  }
-:RA normad_nb is (op=0x3e & opextA=2) ... & normad_nb {  }
-:RL normad_nb is (op=0x3e & opextA=3) ... & normad_nb {  }
+:RD normad is (op=0x3e & opextA=0) ... & normad {  }
+:RF normad is (op=0x3e & opextA=1) ... & normad {  }
+:RA normad is (op=0x3e & opextA=2) ... & normad {  }
+:RL normad is (op=0x3e & opextA=3) ... & normad {  }
 :PD normad_nb is (op=0x3e & opextA=4) ... & normad_nb {  }
 :PF normad_nb is (op=0x3e & opextA=5) ... & normad_nb {  }
 :PA normad_nb is (op=0x3e & opextA=6) ... & normad_nb {  }

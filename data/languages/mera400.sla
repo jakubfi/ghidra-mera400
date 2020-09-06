@@ -406,18 +406,18 @@
 <operand_sym_head name="normad" id="0xf6" scope="0x7c"/>
 <operand_sym_head name="normad" id="0xf7" scope="0x7d"/>
 <operand_sym_head name="normad" id="0xf8" scope="0x7e"/>
-<operand_sym_head name="normad_nb" id="0xf9" scope="0x7f"/>
-<operand_sym_head name="normad_nb" id="0xfa" scope="0x80"/>
-<operand_sym_head name="normad_nb" id="0xfb" scope="0x81"/>
-<operand_sym_head name="normad_nb" id="0xfc" scope="0x82"/>
+<operand_sym_head name="normad" id="0xf9" scope="0x7f"/>
+<operand_sym_head name="normad" id="0xfa" scope="0x80"/>
+<operand_sym_head name="normad" id="0xfb" scope="0x81"/>
+<operand_sym_head name="normad" id="0xfc" scope="0x82"/>
 <operand_sym_head name="normad_nb" id="0xfd" scope="0x83"/>
 <operand_sym_head name="normad_nb" id="0xfe" scope="0x84"/>
 <operand_sym_head name="normad_nb" id="0xff" scope="0x85"/>
 <operand_sym_head name="normad_nb" id="0x100" scope="0x86"/>
-<operand_sym_head name="normad_nb" id="0x101" scope="0x87"/>
-<operand_sym_head name="normad_nb" id="0x102" scope="0x88"/>
-<operand_sym_head name="normad_nb" id="0x103" scope="0x89"/>
-<operand_sym_head name="normad_nb" id="0x104" scope="0x8a"/>
+<operand_sym_head name="normad" id="0x101" scope="0x87"/>
+<operand_sym_head name="normad" id="0x102" scope="0x88"/>
+<operand_sym_head name="normad" id="0x103" scope="0x89"/>
+<operand_sym_head name="normad" id="0x104" scope="0x8a"/>
 <operand_sym_head name="normad_nb" id="0x105" scope="0x8b"/>
 <operand_sym_head name="normad_nb" id="0x106" scope="0x8c"/>
 <operand_sym_head name="normad_nb" id="0x107" scope="0x8d"/>
@@ -1574,10 +1574,6 @@
 <null/><op_tpl code="BUILD"><null/>
 <varnode_tpl><const_tpl type="spaceid" name="const"/><const_tpl type="real" val="0x0"/><const_tpl type="real" val="0x4"/></varnode_tpl>
 </op_tpl>
-<op_tpl code="CALLOTHER"><null/>
-<varnode_tpl><const_tpl type="spaceid" name="const"/><const_tpl type="real" val="0x2"/><const_tpl type="real" val="0x4"/></varnode_tpl>
-<varnode_tpl><const_tpl type="handle" val="0" s="space"/><const_tpl type="handle" val="0" s="offset"/><const_tpl type="handle" val="0" s="size"/></varnode_tpl>
-</op_tpl>
 </construct_tpl>
 </constructor>
 <constructor parent="0x0" first="1" length="2" line="170">
@@ -1588,6 +1584,10 @@
 <construct_tpl>
 <null/><op_tpl code="BUILD"><null/>
 <varnode_tpl><const_tpl type="spaceid" name="const"/><const_tpl type="real" val="0x0"/><const_tpl type="real" val="0x4"/></varnode_tpl>
+</op_tpl>
+<op_tpl code="CALLOTHER"><null/>
+<varnode_tpl><const_tpl type="spaceid" name="const"/><const_tpl type="real" val="0x2"/><const_tpl type="real" val="0x4"/></varnode_tpl>
+<varnode_tpl><const_tpl type="handle" val="0" s="space"/><const_tpl type="handle" val="0" s="offset"/><const_tpl type="handle" val="0" s="size"/></varnode_tpl>
 </op_tpl>
 </construct_tpl>
 </constructor>
@@ -4956,16 +4956,16 @@
 <operand_sym name="normad" id="0xf8" scope="0x7e" subsym="0x5b" off="0" base="-1" minlen="2" code="true" index="0">
 <operand_exp index="0" table="0x0" ct="0x63"/>
 </operand_sym>
-<operand_sym name="normad_nb" id="0xf9" scope="0x7f" subsym="0x68" off="0" base="-1" minlen="2" index="0">
+<operand_sym name="normad" id="0xf9" scope="0x7f" subsym="0x5b" off="0" base="-1" minlen="2" index="0">
 <operand_exp index="0" table="0x0" ct="0x64"/>
 </operand_sym>
-<operand_sym name="normad_nb" id="0xfa" scope="0x80" subsym="0x68" off="0" base="-1" minlen="2" index="0">
+<operand_sym name="normad" id="0xfa" scope="0x80" subsym="0x5b" off="0" base="-1" minlen="2" index="0">
 <operand_exp index="0" table="0x0" ct="0x65"/>
 </operand_sym>
-<operand_sym name="normad_nb" id="0xfb" scope="0x81" subsym="0x68" off="0" base="-1" minlen="2" index="0">
+<operand_sym name="normad" id="0xfb" scope="0x81" subsym="0x5b" off="0" base="-1" minlen="2" index="0">
 <operand_exp index="0" table="0x0" ct="0x66"/>
 </operand_sym>
-<operand_sym name="normad_nb" id="0xfc" scope="0x82" subsym="0x68" off="0" base="-1" minlen="2" index="0">
+<operand_sym name="normad" id="0xfc" scope="0x82" subsym="0x5b" off="0" base="-1" minlen="2" index="0">
 <operand_exp index="0" table="0x0" ct="0x67"/>
 </operand_sym>
 <operand_sym name="normad_nb" id="0xfd" scope="0x83" subsym="0x68" off="0" base="-1" minlen="2" index="0">
@@ -4980,16 +4980,16 @@
 <operand_sym name="normad_nb" id="0x100" scope="0x86" subsym="0x68" off="0" base="-1" minlen="2" index="0">
 <operand_exp index="0" table="0x0" ct="0x6b"/>
 </operand_sym>
-<operand_sym name="normad_nb" id="0x101" scope="0x87" subsym="0x68" off="0" base="-1" minlen="2" index="0">
+<operand_sym name="normad" id="0x101" scope="0x87" subsym="0x5b" off="0" base="-1" minlen="2" index="0">
 <operand_exp index="0" table="0x0" ct="0x6c"/>
 </operand_sym>
-<operand_sym name="normad_nb" id="0x102" scope="0x88" subsym="0x68" off="0" base="-1" minlen="2" index="0">
+<operand_sym name="normad" id="0x102" scope="0x88" subsym="0x5b" off="0" base="-1" minlen="2" index="0">
 <operand_exp index="0" table="0x0" ct="0x6d"/>
 </operand_sym>
-<operand_sym name="normad_nb" id="0x103" scope="0x89" subsym="0x68" off="0" base="-1" minlen="2" index="0">
+<operand_sym name="normad" id="0x103" scope="0x89" subsym="0x5b" off="0" base="-1" minlen="2" index="0">
 <operand_exp index="0" table="0x0" ct="0x6e"/>
 </operand_sym>
-<operand_sym name="normad_nb" id="0x104" scope="0x8a" subsym="0x68" off="0" base="-1" minlen="2" index="0">
+<operand_sym name="normad" id="0x104" scope="0x8a" subsym="0x5b" off="0" base="-1" minlen="2" index="0">
 <operand_exp index="0" table="0x0" ct="0x6f"/>
 </operand_sym>
 <operand_sym name="normad_nb" id="0x105" scope="0x8b" subsym="0x68" off="0" base="-1" minlen="2" index="0">
