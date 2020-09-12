@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<processor_spec>
+  <programcounter register="IC"/>
+  <default_symbols>
+    <symbol name="_START" address="ram:0000" entry="true"/>
+    <symbol name="INT_0_POWER" address="ram:0040" entry="true" type="code_ptr"/>
+    <symbol name="INT_1_PARITY" address="ram:0041" entry="true" type="code_ptr"/>
+    <symbol name="INT_2_NOMEM" address="ram:0042" entry="true" type="code_ptr"/>
+    <symbol name="INT_3_CPU2H" address="ram:0043" entry="true" type="code_ptr"/>
+    <symbol name="INT_4_POWER_MOD" address="ram:0044" entry="true" type="code_ptr"/>
+    <symbol name="INT_5_TIMER" address="ram:0045" entry="true" type="code_ptr"/>
+    <symbol name="INT_6_INV_INSTR" address="ram:0046" entry="true" type="code_ptr"/>
+    <symbol name="INT_7_DIV_OF" address="ram:0047" entry="true" type="code_ptr"/>
+    <symbol name="INT_8_FP_UF" address="ram:0048" entry="true" type="code_ptr"/>
+    <symbol name="INT_9_FP_OF" address="ram:0049" entry="true" type="code_ptr"/>
+    <symbol name="INT_10_DIV0" address="ram:004a" entry="true" type="code_ptr"/>
+    <symbol name="INT_11_EXTRA" address="ram:004b" entry="true" type="code_ptr"/>
+    <symbol name="INT_12_CH0" address="ram:004c" entry="true" type="code_ptr"/>
+    <symbol name="INT_13_CH1" address="ram:004d" entry="true" type="code_ptr"/>
+    <symbol name="INT_14_CH2" address="ram:004e" entry="true" type="code_ptr"/>
+    <symbol name="INT_15_CH3" address="ram:004f" entry="true" type="code_ptr"/>
+    <symbol name="INT_16_CH4" address="ram:0050" entry="true" type="code_ptr"/>
+    <symbol name="INT_17_CH5" address="ram:0051" entry="true" type="code_ptr"/>
+    <symbol name="INT_18_CH6" address="ram:0052" entry="true" type="code_ptr"/>
+    <symbol name="INT_19_CH7" address="ram:0053" entry="true" type="code_ptr"/>
+    <symbol name="INT_20_CH8" address="ram:0054" entry="true" type="code_ptr"/>
+    <symbol name="INT_21_CH9" address="ram:0055" entry="true" type="code_ptr"/>
+    <symbol name="INT_22_CH10" address="ram:0056" entry="true" type="code_ptr"/>
+    <symbol name="INT_23_CH11" address="ram:0057" entry="true" type="code_ptr"/>
+    <symbol name="INT_24_CH12" address="ram:0058" entry="true" type="code_ptr"/>
+    <symbol name="INT_25_CH13" address="ram:0059" entry="true" type="code_ptr"/>
+    <symbol name="INT_26_CH14" address="ram:005a" entry="true" type="code_ptr"/>
+    <symbol name="INT_27_CH15" address="ram:005b" entry="true" type="code_ptr"/>
+    <symbol name="INT_28_OPRQ" address="ram:005c" entry="true" type="code_ptr"/>
+    <symbol name="INT_29_CPU2L" address="ram:005d" entry="true" type="code_ptr"/>
+    <symbol name="INT_30_SOFTH" address="ram:005e" entry="true" type="code_ptr"/>
+    <symbol name="INT_31_SOFTL" address="ram:005f" entry="true" type="code_ptr"/>
+    <symbol name="EXLP" address="ram:0060" entry="true" type="code_ptr"/>
+    <symbol name="STACKP" address="ram:0061" entry="false"/>
+  </default_symbols>
+</processor_spec>
+

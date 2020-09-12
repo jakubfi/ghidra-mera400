@@ -4,7 +4,7 @@
   <global>
     <range space="ram"/>
   </global>
-  <stackpointer register="SP" space="ram" growth="negative"/>
+  <stackpointer register="SP" space="ram" growth="positive"/>
   <default_proto>
     <prototype name="__stdcall" extrapop="-2" stackshift="-2">
       <input>

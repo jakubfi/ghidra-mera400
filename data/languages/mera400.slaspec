@@ -7,10 +7,25 @@ define space ram type=ram_space wordsize=2 size=2 default;
 define space nbseg type=ram_space wordsize=2 size=2;
 define space register type=register_space wordsize=2 size=2;
 
-define register offset=0 size=2 [ r0 r1 r2 r3 r4 r5 r6 r7 ];
+define register offset=0 size=2  [ r0 r1 r2 r3 r4 r5 r6 r7 ];
+define register offset=2 size=4  [   dr1                   ];
+define register offset=2 size=6  [   fr1                   ];
+define register offset=10 size=6 [               fr5       ];
 # there is no SP in MERA-400, but stack analysis fails without it
-define register offset=16 size=2 [ IC SP NB ];
-define register offset=32 size=1 [ Z M V C L E G Y X ];
+define register offset=16 size=2 [ IC SP MOD RZ SR ];
+
+@define Z "r0[15,1]"
+@define M "r0[14,1]"
+@define V "r0[13,1]"
+@define C "r0[12,1]"
+@define L "r0[11,1]"
+@define E "r0[10,1]"
+@define G "r0[9,1]"
+@define Y "r0[8,1]"
+@define X "r0[7,1]"
+
+@define NB "SR[0,6]"
+@define RM "SR[6,10]"
 
 define token opword (16)
 	op = (10,15)
@@ -20,23 +35,22 @@ define token opword (16)
 	opextD = (9,9)
 	opextB = (3,5)
 	opextC = (0,2)
-
 	d = (9,9)
-
 	regA = (6,8)
 	regB = (3,5)
 	regC = (0,2)
-
-	t = (0,5) signed
-	tu = (0,5)
-	ts = (0,2) signed
-	tsu = (9,9)
+	t = (0,5)
+	ts = (0,2)
 	tsign = (9,9)
-	b = (0,7)
+	imm8 = (0,7)
 ;
 
 define token data16 (16)
 	imm16 = (0,15)
+	io_no = (0,15)
+	io_en = (0,15)
+	io_ok = (0,15)
+	io_pe = (0,15)
 ;
 
 # ------------------------------------------------------------------------
@@ -48,198 +62,748 @@ attach variables [ regA regB regC ] [ r0 r1 r2 r3 r4 r5 r6 r7 ];
 define pcodeop out;
 define pcodeop in;
 define pcodeop exl;
-define pcodeop nrf;
+define pcodeop normalize_float;
 define pcodeop halt;
 define pcodeop reset;
+define pcodeop read_keys;
+define pcodeop soft_int_all;
+define pcodeop soft_int_lower;
+define pcodeop soft_int_upper;
+define pcodeop soft_int_clear;
+define pcodeop cpu2_int_upper;
+define pcodeop cpu2_int_lower;
+define pcodeop crook_on;
+define pcodeop sint;
+define pcodeop sind;
+define pcodeop int_return;
 
-# --- 8-bit argument -----------------------------------------------------
+# --- instruction arguments ----------------------------------------------
 
-imm8: b is b { val:1 = b; export val; }
+imm7u: val is tsign & t [ val = t | tsign<<6; ] { tmp:2 = val; export tmp; }
+imm7s: val is tsign & t [ val = t*(tsign*-2+1); ] { tmp:2 = val; export tmp; }
+imm4u: val is tsign & ts [ val = ts | tsign << 4; ] { tmp:2 = val; export tmp; }
+rel7: loc is tsign & t [ loc = inst_next + t*(tsign*-2+1); ] { export *:2 loc; }
 
-# --- 7-bit argument -----------------------------------------------------
-
-imm7u: val is tsign & tu [ val = tu | tsign<<6; ] { tmp:2 = val; export tmp; }
-
-imm7: t is tsign=0 & t { val:2 = t; export val; }
-imm7: -t is tsign=1 & t { val:2 = -t; export val; }
-
-rel7: loc is tsign=0 & t [ loc = inst_next + t; ] { export *:2 loc; }
-rel7: loc is tsign=1 & t [ loc = inst_next - t; ] { export *:2 loc; }
-
-# --- Normal argument ----------------------------------------------------
-
-addr16: imm16 is imm16 { export *:2 imm16; }
-addr16_nb: imm16 is imm16 { export *[nbseg]:2 imm16; }
-
-no16: imm16 is imm16 { export *:2 imm16; }
-en16: imm16 is imm16 { export *:2 imm16; }
-ok16: imm16 is imm16 { export *:2 imm16; }
-pe16: imm16 is imm16 { export *:2 imm16; }
-ioarg: no16, en16, ok16, pe16 is no16; en16; ok16; pe16 {  }
-
-norm: regC		is d=0 & regB=0 & regC { export regC; }
+norm: regC			is d=0 & regB=0 & regC { export regC; }
 norm: regC+regB		is d=0 & regC & regB { tmp = regB+regC; export tmp; }
-norm: imm16		is d=0 & regB=0 & regC=0; imm16 { tmp:2 = imm16; export tmp; }
+norm: imm16			is d=0 & regB=0 & regC=0; imm16 { tmp:2 = imm16; export tmp; }
 norm: regB+imm16	is d=0 & regC=0 & regB; imm16 { tmp:2 = regB+imm16; export tmp; }
-norm: [regC]		is d=1 & regB=0 & regC { export * regC; }
-norm: [regC+regB]	is d=1 & regC & regB { tmp:2 = regB+regC; export * tmp; }
-norm: [addr16]		is d=1 & regB=0 & regC=0 ; addr16 { export addr16; }
-norm: [regB+imm16]	is d=1 & regC=0 & regB; imm16 { tmp:2 = regB + imm16; export * tmp; }
+norm: [regC]		is d=1 & regB=0 & regC { export *:2 regC; }
+norm: [regC+regB]	is d=1 & regC & regB { tmp = regB+regC; export *:2 tmp; }
+norm: [imm16]		is d=1 & regB=0 & regC=0 ; imm16 { export *:2 imm16; }
+norm: [regB+imm16]	is d=1 & regC=0 & regB; imm16 { tmp:2 = regB + imm16; export *:2 tmp; }
 
-normad: regC		is d=0 & regB=0 & regC { export *:2 regC; }
-normad: regC+regB	is d=0 & regC & regB { tmp = regB+regC; export * tmp; }
-normad: addr16		is d=0 & regB=0 & regC=0; addr16 { export addr16; }
-normad: regB+imm16	is d=0 & regC=0 & regB; imm16 { tmp:2 = regB+imm16; export * tmp; }
-normad: [regC]		is d=1 & regB=0 & regC { tmp:2 = * regC; export * tmp; }
-normad: [regC+regB]	is d=1 & regC & regB { tmp:2 = * (regB+regC); export * tmp; }
-normad: [addr16]	is d=1 & regB=0 & regC=0 ; addr16 { export * addr16; }
-normad: [regB+imm16]	is d=1 & regC=0 & regB; imm16 { tmp:2 = * (regB + imm16); export *tmp; }
+# --- norm arg loads and stores ------------------------------------------
 
-normad_nb: regC		is d=0 & regB=0 & regC { export *[nbseg]:2 regC; }
-normad_nb: regC+regB	is d=0 & regC & regB { tmp = regB+regC; export *[nbseg] tmp; }
-normad_nb: addr16_nb	is d=0 & regB=0 & regC=0; addr16_nb { export addr16_nb; }
-normad_nb: regB+imm16	is d=0 & regC=0 & regB; imm16 { tmp:2 = regB+imm16; export *[nbseg] tmp; }
-normad_nb: [regC]	is d=1 & regB=0 & regC { tmp:2 = *[nbseg] regC; export * tmp; }
-normad_nb: [regC+regB]	is d=1 & regC & regB { tmp:2 = *[nbseg] regB+regC; export * tmp; }
-normad_nb: [addr16_nb]	is d=1 & regB=0 & regC=0 ; addr16_nb { export * addr16_nb; }
-normad_nb: [regB+imm16] is d=1 & regC=0 & regB; imm16 { tmp:2 = *[nbseg] (regB + imm16); export * tmp; }
+:LW regA, norm is (op=0x10 & regA) ... & norm
+{
+	regA = norm;
+}
 
-# --- Instructions -------------------------------------------------------
+:TW regA, norm is (op=0x11 & regA) ... & norm
+{
+	regA = norm;
+}
 
-:LW regA, norm is (op=0x10 & regA) ... & norm { regA = norm; }
-:TW regA, normad_nb is (op=0x11 & regA) ... & normad_nb { regA = normad_nb; }
-:LS regA, norm is (op=0x12 & regA) ... & norm { regA = (regA & ~r7) | (regA & r7); }
-:RI regA, norm is (op=0x13 & regA) ... & norm { *regA = norm; regA = regA+1; }
-:RW regA, normad is (op=0x14 & regA) ... & normad { *normad = regA; }
-:PW regA, normad_nb is (op=0x15 & regA) ... & normad_nb { *normad_nb = regA; }
-:RJ regA, normad is (op=0x16 & regA) ... & normad { regA = inst_next; call normad; }
-:IS regA, normad_nb is (op=0x17 & regA) ... & normad_nb { p = (*normad_nb & regA == regA); if (p) goto inst_next; *normad_nb = *normad_nb | regA; }
-:BB regA, norm is (op=0x18 & regA) ... & norm { if ((regA & norm) == norm) goto inst_next; }
-:BM regA, normad_nb is (op=0x19 & regA) ... & normad_nb { if ((regA & *normad_nb) == regA) goto inst_next; }
-:BS regA, norm is (op=0x1a & regA) ... & norm { if ((regA & r7) == (norm & r7)) goto inst_next; }
-:BC regA, norm is (op=0x1b & regA) ... & norm { if ((regA & norm) != norm) goto inst_next; }
-:BN regA, norm is (op=0x1c & regA) ... & norm { if ((regA & norm) == 0) goto inst_next; }
-:OU regA, norm is (op=0x1d & regA) ... & norm; ioarg { out(regA, norm, ioarg); }
-:IN regA, norm is (op=0x1e & regA) ... & norm; ioarg  { in(regA, norm, ioarg); }
+:LS regA, norm is (op=0x12 & regA) ... & norm
+{
+	regA = (regA & ~r7) | (regA & r7);
+}
 
-:AD normad is (op=0x1f & opextA=0x0) ... & normad { tmp:4 = (zext(r1)*65536 + zext(r2)) + ((*normad)*65536 + (*(normad+1))); r1 = tmp(2); r2 = tmp:2; }
-:SD normad is (op=0x1f & opextA=0x1) ... & normad { tmp:4 = (zext(r1)*65536 + zext(r2)) - ((*normad)*65536 + (*(normad+1))); r1 = tmp(2); r2 = tmp:2; }
-:MW normad is (op=0x1f & opextA=0x2) ... & normad { tmp:4 = (zext(r2) * (*normad)); r1 = tmp(2); r2 = tmp:2; }
-:DW normad is (op=0x1f & opextA=0x3) ... & normad { tmp1:4 = (zext(r1)*65536 + zext(r2)) / (*normad); tmp2:4 = (zext(r1)*65536 + zext(r2)) % (*normad); r1 = tmp1:2; r2 = tmp2:2; }
-:AF normad is (op=0x1f & opextA=0x4) ... & normad { }
-:SF normad is (op=0x1f & opextA=0x5) ... & normad { }
-:MF normad is (op=0x1f & opextA=0x6) ... & normad { }
-:DF normad is (op=0x1f & opextA=0x7) ... & normad { }
+:RI regA, norm is (op=0x13 & regA) ... & norm
+{
+	*:2 regA = norm;
+	regA = regA+1;
+}
 
-:AW regA, norm is (op=0x20 & regA) ... & norm { regA = regA + norm; }
-:AC regA, norm is (op=0x21 & regA) ... & norm { regA = regA + norm; }
-:SW regA, norm is (op=0x22 & regA) ... & norm { regA = regA - norm; }
-:CW regA, norm is (op=0x23 & regA) ... & norm {  }
-:OR regA, norm is (op=0x24 & regA) ... & norm {  }
-:OM regA, normad_nb is (op=0x25 & regA) ... & normad_nb {  }
-:NR regA, norm is (op=0x26 & regA) ... & norm {  }
-:NM regA, normad_nb is (op=0x27 & regA) ... & normad_nb {  }
-:ER regA, norm is (op=0x28 & regA) ... & norm {  }
-:EM regA, normad_nb is (op=0x29 & regA) ... & normad_nb {  }
-:XR regA, norm is (op=0x2a & regA) ... & norm {  }
-:XM regA, normad_nb is (op=0x2b & regA) ... & normad_nb {  }
-:CL regA, norm is (op=0x2c & regA) ... & norm {  }
-:LB regA, normad_nb is (op=0x2d & regA) ... & normad_nb {  }
-:RB regA, normad_nb is (op=0x2e & regA) ... & normad_nb {  }
-:CB regA, normad_nb is (op=0x2f & regA) ... & normad_nb {  }
+:RW regA, norm is (op=0x14 & regA) ... & norm
+{
+	*:2 norm = regA;
+}
 
-:AWT regA, imm7 is op=0x30 & regA & imm7 { regA = regA + imm7; }
-:TRB regA, imm7 is op=0x31 & regA & imm7 {  }
-:IRB regA, imm7 is op=0x32 & regA & imm7 {  }
-:DRB regA, imm7 is op=0x33 & regA & imm7 {  }
-:CWT regA, imm7 is op=0x34 & regA & imm7 {  }
-:LWT regA, imm7 is op=0x35 & regA & imm7 {  }
-:LWS regA, imm7 is op=0x36 & regA & imm7 {  }
-:RWS regA, imm7 is op=0x37 & regA & imm7 {  }
+:PW regA, norm is (op=0x15 & regA) ... & norm
+{
+	*:2 norm = regA;
+}
 
-:UJS rel7 is op=0x38 & opextA=0 & rel7 { goto rel7; }
-:JLS rel7 is op=0x38 & opextA=1 & rel7 { if (L) goto rel7; }
-:JES rel7 is op=0x38 & opextA=2 & rel7 { if (E) goto rel7; }
-:JGS rel7 is op=0x38 & opextA=3 & rel7 { if (G) goto rel7; }
-:JVS rel7 is op=0x38 & opextA=4 & rel7 { if (V) goto rel7; }
-:JXS rel7 is op=0x38 & opextA=5 & rel7 { if (X) goto rel7; }
-:JYS rel7 is op=0x38 & opextA=6 & rel7 { if (Y) goto rel7; }
-:JCS rel7 is op=0x38 & opextA=7 & rel7 { if (C) goto rel7; }
+# --- branching ----------------------------------------------------------
 
-:BLC imm8 is op=0x39 & opextKA2=0 & imm8 {  }
-:EXL imm8 is op=0x39 & opextKA2=1 & imm8 { exl(imm8); }
-:BRC imm8 is op=0x39 & opextKA2=2 & imm8 {  }
-:NRF imm8 is op=0x39 & opextKA2=3 & imm8 { nrf(imm8); }
+:RJ regA, norm is (op=0x16 & regA) ... & norm
+{
+	regA = inst_next;
+	call [norm];
+}
 
-:RIC regA is op=0x3a & opextD=0 & opextBC=0x0 & regA { }
-:ZLB regA is op=0x3a & opextD=0 & opextBC=0x1 & regA { }
-:SXU regA is op=0x3a & opextD=0 & opextBC=0x2 & regA { }
-:NGA regA is op=0x3a & opextD=0 & opextBC=0x3 & regA { }
-:SLZ regA is op=0x3a & opextD=0 & opextBC=0x4 & regA { }
-:SLY regA is op=0x3a & opextD=0 & opextBC=0x5 & regA { }
-:SLX regA is op=0x3a & opextD=0 & opextBC=0x6 & regA { }
-:SRY regA is op=0x3a & opextD=0 & opextBC=0x7 & regA { }
-:NGL regA is op=0x3a & opextD=0 & opextBC=0x8 & regA { }
-:RPC regA is op=0x3a & opextD=0 & opextBC=0x9 & regA { }
-:SHC regA is op=0x3a & opextB=2 & ts & tsu & regA { }
-:RKY regA is op=0x3a & opextD=1 & opextBC=0x0 & regA { }
-:ZRB regA is op=0x3a & opextD=1 & opextBC=0x1 & regA { }
-:SXL regA is op=0x3a & opextD=1 & opextBC=0x2 & regA { }
-:NGC regA is op=0x3a & opextD=1 & opextBC=0x3 & regA { }
-:SVZ regA is op=0x3a & opextD=1 & opextBC=0x4 & regA { }
-:SVY regA is op=0x3a & opextD=1 & opextBC=0x5 & regA { }
-:SVX regA is op=0x3a & opextD=1 & opextBC=0x6 & regA { }
-:SRX regA is op=0x3a & opextD=1 & opextBC=0x7 & regA { }
-:SRZ regA is op=0x3a & opextD=1 & opextBC=0x8 & regA { }
-:LPC regA is op=0x3a & opextD=1 & opextBC=0x9 & regA { }
+:IS regA, norm is (op=0x17 & regA) ... & norm
+{
+	p = (*norm & regA == regA);
+	if (p) goto inst_next;
+	*norm = *norm | regA;
+}
 
-:HLT imm7u is op=0x3b & opextA=0 & imm7u { halt(imm7u); }
-:MCL is op=0x3b & opextA=1 { reset(); }
-:SIT is op=0x3b & opextA=1 & opextC=3 {  }
-:SIL is op=0x3b & opextA=2 & opextC=1 {  }
-:SIU is op=0x3b & opextA=2 & opextC=2 {  }
-:CIT is op=0x3b & opextA=2 & opextC=0 {  }
-:GIU is op=0x3b & opextA=3 & opextD=0 {  }
-:LIP is op=0x3b & opextA=4 {  }
-:GIL is op=0x3b & opextA=3 & opextD=1 {  }
+:BB regA, norm is (op=0x18 & regA) ... & norm
+{
+	if ((regA & norm) == norm) goto inst_next;
+}
 
-:CRON is op=0x3b & opextA=5 {  }
-:SINT is op=0x3b & opextA=2 & opextC=4 & opextD=0 {  }
-:SIND is op=0x3b & opextA=2 & opextC=4 & opextD=1 {  }
+:BM regA, norm is (op=0x19 & regA) ... & norm
+{
+	if ((regA & *norm) == regA) goto inst_next;
+}
 
-:UJ normad is (op=0x3c & opextA=0) ... & normad { goto normad; }
-:JL normad is (op=0x3c & opextA=1) ... & normad { if (L) goto normad; }
-:JE normad is (op=0x3c & opextA=2) ... & normad { if (E) goto normad; }
-:JG normad is (op=0x3c & opextA=3) ... & normad { if (G) goto normad; }
-:JZ normad is (op=0x3c & opextA=4) ... & normad { if (Z) goto normad; }
-:JM normad is (op=0x3c & opextA=5) ... & normad { if (M) goto normad; }
-:JN normad is (op=0x3c & opextA=6) ... & normad { if (~E) goto normad; }
-:LJ normad is (op=0x3c & opextA=7) ... & normad { call normad; }
+:BS regA, norm is (op=0x1a & regA) ... & norm
+{
+	if ((regA & r7) == (norm & r7)) goto inst_next;
+}
 
-:LD normad is (op=0x3d & opextA=0) ... & normad {  }
-:LF normad is (op=0x3d & opextA=1) ... & normad {  }
-:LA normad is (op=0x3d & opextA=2) ... & normad {  }
-:LL normad is (op=0x3d & opextA=3) ... & normad {  }
-:TD normad_nb is (op=0x3d & opextA=4) ... & normad_nb {  }
-:TF normad_nb is (op=0x3d & opextA=5) ... & normad_nb {  }
-:TA normad_nb is (op=0x3d & opextA=6) ... & normad_nb {  }
-:TL normad_nb is (op=0x3d & opextA=7) ... & normad_nb {  }
+:BC regA, norm is (op=0x1b & regA) ... & norm
+{
+	if ((regA & norm) != norm) goto inst_next;
+}
 
-:RD normad is (op=0x3e & opextA=0) ... & normad {  }
-:RF normad is (op=0x3e & opextA=1) ... & normad {  }
-:RA normad is (op=0x3e & opextA=2) ... & normad {  }
-:RL normad is (op=0x3e & opextA=3) ... & normad {  }
-:PD normad_nb is (op=0x3e & opextA=4) ... & normad_nb {  }
-:PF normad_nb is (op=0x3e & opextA=5) ... & normad_nb {  }
-:PA normad_nb is (op=0x3e & opextA=6) ... & normad_nb {  }
-:PL normad_nb is (op=0x3e & opextA=7) ... & normad_nb {  }
+:BN regA, norm is (op=0x1c & regA) ... & norm
+{
+	if ((regA & norm) == 0) goto inst_next;
+}
 
-:MB normad is (op=0x3f & opextA=0) ... & normad {  }
-:IM normad is (op=0x3f & opextA=1) ... & normad {  }
-:KI normad is (op=0x3f & opextA=2) ... & normad {  }
-:FI normad is (op=0x3f & opextA=3) ... & normad {  }
-:SP normad is (op=0x3f & opextA=4) ... & normad {  }
-:MD normad is (op=0x3f & opextA=5) ... & normad {  }
-:RZ normad is (op=0x3f & opextA=6) ... & normad {  }
-:IB normad is (op=0x3f & opextA=7) ... & normad {  }
+:OU regA, norm >io_no >io_en >io_ok >io_pe is (op=0x1d & regA) ... & norm ; io_no ; io_en ; io_ok ; io_pe
+{
+	out(regA, norm, io_no:2, io_en:2, io_ok:2, io_pe:2);
+	goto [io_ok:2];
+	goto [io_en:2];
+	goto [io_no:2];
+	goto [io_pe:2];
+}
 
+:IN regA, norm >io_no >io_en >io_ok >io_pe is (op=0x1e & regA) ... & norm ; io_no ; io_en ; io_ok ; io_pe
+{
+	in(regA, norm, io_no:2, io_en:2, io_ok:2, io_pe:2);
+	goto [io_ok:2];
+	goto [io_en:2];
+	goto [io_no:2];
+	goto [io_pe:2];
+}
+
+# --- norm arg arithmetic ------------------------------------------------
+
+:AW regA, norm is (op=0x20 & regA) ... & norm
+{
+	local oldA = regA;
+	regA = regA + norm;
+
+	$(Z) = (regA == 0);
+	$(M) = (regA s< 0);
+	$(V) = (((oldA s> 0) && (regA s< 0)) || ((oldA s< 0) && (regA s> 0)));
+	$(C) = carry(oldA, norm);
+}
+
+:AC regA, norm is (op=0x21 & regA) ... & norm
+{
+	regA = regA + norm + zext($(C));
+}
+
+:SW regA, norm is (op=0x22 & regA) ... & norm
+{
+	regA = regA - norm;
+}
+
+:AD norm is (op=0x1f & opextA=0x0) ... & norm
+{
+	dr1 = dr1 + *:4 norm;
+}
+
+:SD norm is (op=0x1f & opextA=0x1) ... & norm
+{
+	dr1 = dr1 - *:4 norm;
+}
+
+:MW norm is (op=0x1f & opextA=0x2) ... & norm
+{
+	dr1 = zext(r2) * *:4 norm;
+}
+
+:DW norm is (op=0x1f & opextA=0x3) ... & norm
+{
+	local res:4 = dr1 / *:4 norm;
+	local rem:4 = dr1 % *:4 norm;
+	r1 = res:2;
+	r2 = rem:2;
+}
+
+:AF norm is (op=0x1f & opextA=0x4) ... & norm
+{
+	fr1 = fr1 f+ *:6 norm;
+}
+
+:SF norm is (op=0x1f & opextA=0x5) ... & norm
+{
+	fr1 = fr1 f- *:6 norm;
+}
+
+:MF norm is (op=0x1f & opextA=0x6) ... & norm
+{
+	fr1 = fr1 f* *:6 norm;
+}
+
+:DF norm is (op=0x1f & opextA=0x7) ... & norm
+{
+	fr1 = fr1 f/ *:6 norm;
+}
+
+# --- norm arg bitwise operations, register ------------------------------
+
+:OR regA, norm is (op=0x24 & regA) ... & norm
+{
+	regA = regA | norm;
+}
+
+:NR regA, norm is (op=0x26 & regA) ... & norm
+{
+	regA = regA & norm;
+}
+
+:ER regA, norm is (op=0x28 & regA) ... & norm
+{
+	regA = regA & ~norm;
+}
+
+:XR regA, norm is (op=0x2a & regA) ... & norm
+{
+	regA = regA ^ norm;
+}
+
+# --- norm arg bitwise operations, memory --------------------------------
+
+:OM regA, norm is (op=0x25 & regA) ... & norm
+{
+	*:2 norm = *:2 norm | regA;
+}
+
+:NM regA, norm is (op=0x27 & regA) ... & norm
+{
+	*:2 norm = *:2 norm & regA;
+}
+
+:EM regA, norm is (op=0x29 & regA) ... & norm
+{
+	*:2 norm = *:2 norm & ~regA;
+}
+
+:XM regA, norm is (op=0x2b & regA) ... & norm
+{
+	*:2 norm = *:2 norm ^ regA;
+}
+
+# --- norm arg compares --------------------------------------------------
+
+:CW regA, norm is (op=0x23 & regA) ... & norm
+{
+	$(L) = (regA s< norm);
+	$(E) = (regA == norm);
+	$(G) = (regA s> norm);
+}
+
+:CL regA, norm is (op=0x2c & regA) ... & norm
+{
+	$(L) = (regA < norm);
+	$(E) = (regA == norm);
+	$(G) = (regA > norm);
+}
+
+# --- byte operations ----------------------------------------------------
+
+:LB regA, norm is (op=0x2d & regA) ... & norm
+{
+	# TODO: left/right byte is ignored
+	local data:2 = *:2 (norm>>1);
+	regA[0,8] = data:1;
+}
+
+:RB regA, norm is (op=0x2e & regA) ... & norm
+{
+	# TODO: left/right byte is ignored
+	local data:2 = (*(norm>>1)) & 0xff00;
+	*(norm>>1) = data | zext(regA[0,8]);
+}
+
+:CB regA, norm is (op=0x2f & regA) ... & norm
+{
+	# TODO: left/right byte is ignored
+	local data:2 = *:2 (norm>>1);
+	$(L) = (regA < data);
+	$(E) = (regA == data);
+	$(G) = (regA > data);
+}
+
+:AWT regA, imm7s is op=0x30 & regA & imm7s
+{
+	regA = regA + imm7s;
+}
+
+:TRB regA, imm7s is op=0x31 & regA & imm7s
+{
+	regA = regA + imm7s;
+	if (regA != 0:2) goto inst_next;
+	delayslot(1);
+	goto inst_next;
+}
+
+:IRB regA, rel7 is op=0x32 & regA & rel7
+{
+	regA = regA + 1;
+	if (regA == 0:2) goto inst_next;
+	goto [rel7];
+}
+
+:DRB regA, rel7 is op=0x33 & regA & rel7
+{
+	regA = regA - 1;
+	if (regA == 0:2) goto inst_next;
+	goto [rel7];
+}
+
+:CWT regA, imm7s is op=0x34 & regA & imm7s
+{
+	$(L) = (regA s< imm7s);
+	$(E) = (regA == imm7s);
+	$(G) = (regA s> imm7s);
+}
+
+:LWT regA, imm7s is op=0x35 & regA & imm7s
+{
+	regA = imm7s;
+}
+
+:LWS regA, imm7s is op=0x36 & regA & imm7s
+{
+	local tmp:2 = inst_next + imm7s;
+	regA = *:2 tmp;
+}
+
+:RWS regA, imm7s is op=0x37 & regA & imm7s
+{
+	local tmp:2 = inst_next + imm7s;
+	*:2 tmp = regA;
+}
+
+:UJS rel7 is op=0x38 & opextA=0 & rel7
+{
+	goto rel7;
+}
+
+:JLS rel7 is op=0x38 & opextA=1 & rel7
+{
+	if $(L) goto rel7;
+}
+
+:JES rel7 is op=0x38 & opextA=2 & rel7
+{
+	if $(E) goto rel7;
+}
+
+:JGS rel7 is op=0x38 & opextA=3 & rel7
+{
+	if $(G) goto rel7;
+}
+
+:JVS rel7 is op=0x38 & opextA=4 & rel7
+{
+	if $(V) goto rel7;
+}
+
+:JXS rel7 is op=0x38 & opextA=5 & rel7
+{
+	if $(X) goto rel7;
+}
+
+:JYS rel7 is op=0x38 & opextA=6 & rel7
+{
+	if $(Y) goto rel7;
+}
+
+:JCS rel7 is op=0x38 & opextA=7 & rel7
+{
+	if $(C) goto rel7;
+}
+
+:BLC imm8 is op=0x39 & opextKA2=0 & imm8
+{
+	local tmp:1 = r0[8,8] & imm8;
+	if (tmp == imm8) goto inst_next;
+	delayslot(1);
+	goto inst_next;
+}
+
+:BRC imm8 is op=0x39 & opextKA2=2 & imm8
+{
+	local tmp:1 = r0[0,8] & imm8;
+	if (tmp == imm8) goto inst_next;
+	delayslot(1);
+	goto inst_next;
+}
+
+:EXL imm8 is op=0x39 & opextKA2=1 & imm8
+{
+	exl(imm8:1);
+}
+
+:NRF imm8 is op=0x39 & opextKA2=3 & imm8
+{
+	fr1 = normalize_float(imm8:1);
+}
+
+# --- left shifts --------------------------------------------------------
+
+:SLZ regA is op=0x3a & opextD=0 & opextBC=0x4 & regA
+{
+	regA = regA << 1;
+}
+
+:SLY regA is op=0x3a & opextD=0 & opextBC=0x5 & regA
+{
+	regA = (regA << 1) | zext($(Y));
+}
+
+:SLX regA is op=0x3a & opextD=0 & opextBC=0x6 & regA
+{
+	regA = (regA << 1) | zext($(X));
+}
+
+:SVZ regA is op=0x3a & opextD=1 & opextBC=0x4 & regA
+{
+	$(V) = regA[15,1];
+	regA = regA << 1;
+}
+
+:SVY regA is op=0x3a & opextD=1 & opextBC=0x5 & regA
+{
+	$(V) = regA[15,1];
+	regA = (regA << 1) | zext($(Y));
+}
+
+:SVX regA is op=0x3a & opextD=1 & opextBC=0x6 & regA
+{
+	$(V) = regA[15,1];
+	regA = (regA << 1) | zext($(X));
+}
+
+# --- right shifts -------------------------------------------------------
+
+:SRY regA is op=0x3a & opextD=0 & opextBC=0x7 & regA
+{
+	regA = (regA >> 1) | (zext($(Y)) << 15);
+}
+
+:SRX regA is op=0x3a & opextD=1 & opextBC=0x7 & regA
+{
+	regA = (regA >> 1) | (zext($(X)) << 15);
+}
+
+:SRZ regA is op=0x3a & opextD=1 & opextBC=0x8 & regA
+{
+	regA = regA >> 1;
+}
+
+:SHC regA, imm4u is op=0x3a & opextB=2 & regA & imm4u
+{
+	regA = regA >> imm4u;
+}
+
+# ------------------------------------------------------------------------
+
+:RIC regA is op=0x3a & opextD=0 & opextBC=0x0 & regA
+{
+	regA = IC;
+}
+
+:ZLB regA is op=0x3a & opextD=0 & opextBC=0x1 & regA
+{
+	regA = regA & 0x00ff;
+}
+
+:SXU regA is op=0x3a & opextD=0 & opextBC=0x2 & regA
+{
+	$(X) = regA[15,1];
+}
+
+:NGA regA is op=0x3a & opextD=0 & opextBC=0x3 & regA
+{
+	regA = -regA;
+}
+
+:NGL regA is op=0x3a & opextD=0 & opextBC=0x8 & regA
+{
+	regA = ~regA;
+}
+
+:RPC regA is op=0x3a & opextD=0 & opextBC=0x9 & regA
+{
+	regA = r0;
+}
+
+:RKY regA is op=0x3a & opextD=1 & opextBC=0x0 & regA
+{
+	regA = read_keys(regA);
+}
+
+:ZRB regA is op=0x3a & opextD=1 & opextBC=0x1 & regA
+{
+	regA = regA & 0xff00;
+}
+
+:SXL regA is op=0x3a & opextD=1 & opextBC=0x2 & regA
+{
+	$(X) = regA[0,1];
+}
+
+:NGC regA is op=0x3a & opextD=1 & opextBC=0x3 & regA
+{
+	regA = ~regA + zext($(C));
+}
+
+:LPC regA is op=0x3a & opextD=1 & opextBC=0x9 & regA
+{
+	r0 = regA;
+}
+
+:HLT imm7u is op=0x3b & opextA=0 & imm7u
+{
+	halt(imm7u);
+}
+
+:MCL is op=0x3b & opextA=1
+{
+	reset();
+}
+
+:SIT is op=0x3b & opextA=1 & opextC=3
+{
+	soft_int_all();
+}
+
+:SIL is op=0x3b & opextA=2 & opextC=1
+{
+	soft_int_lower();
+}
+
+:SIU is op=0x3b & opextA=2 & opextC=2
+{
+	soft_int_upper();
+}
+
+:CIT is op=0x3b & opextA=2 & opextC=0
+{
+	soft_int_clear();
+}
+
+:GIU is op=0x3b & opextA=3 & opextD=0
+{
+	cpu2_int_upper();
+}
+
+:GIL is op=0x3b & opextA=3 & opextD=1
+{
+	cpu2_int_lower();
+}
+
+:LIP is op=0x3b & opextA=4
+{
+	int_return();
+}
+
+:CRON is op=0x3b & opextA=5
+{
+	crook_on();
+}
+
+:SINT is op=0x3b & opextA=2 & opextC=4 & opextD=0
+{
+	sint();
+}
+
+:SIND is op=0x3b & opextA=2 & opextC=4 & opextD=1
+{
+	sind();
+}
+
+:UJ norm is (op=0x3c & opextA=0) ... & norm
+{
+	goto [norm:2];
+}
+
+:JL norm is (op=0x3c & opextA=1) ... & norm
+{
+	if !$(L) goto inst_next;
+	goto [norm];
+}
+
+:JE norm is (op=0x3c & opextA=2) ... & norm
+{
+	if !$(E) goto inst_next;
+	goto [norm];
+}
+
+:JG norm is (op=0x3c & opextA=3) ... & norm
+{
+	if !$(G) goto inst_next;
+	goto [norm];
+}
+:JZ norm is (op=0x3c & opextA=4) ... & norm
+{
+	if !$(Z) goto inst_next;
+	goto [norm];
+}
+
+:JM norm is (op=0x3c & opextA=5) ... & norm
+{
+	if !$(M) goto inst_next;
+	goto [norm];
+}
+
+:JN norm is (op=0x3c & opextA=6) ... & norm
+{
+	if $(E) goto inst_next;
+	goto [norm];
+}
+
+:LJ norm is (op=0x3c & opextA=7) ... & norm
+{
+	goto [norm+1];
+	goto inst_next;
+}
+
+# OK
+:LD norm is (op=0x3d & opextA=0) ... & norm
+{
+	r1 = *:2 (norm+0);
+	r2 = *:2 (norm+1);
+}
+
+# OK
+:LF norm is (op=0x3d & opextA=1) ... & norm
+{
+	r1 = *:2 (norm+0);
+	r2 = *:2 (norm+1);
+	r3 = *:2 (norm+2);
+}
+
+# OK
+:LA norm is (op=0x3d & opextA=2) ... & norm
+{
+	r1 = *:2 (norm+0);
+	r2 = *:2 (norm+1);
+	r3 = *:2 (norm+2);
+	r4 = *:2 (norm+3);
+	r5 = *:2 (norm+4);
+	r6 = *:2 (norm+5);
+	r7 = *:2 (norm+6);
+}
+
+# OK
+:LL norm is (op=0x3d & opextA=3) ... & norm
+{
+	r5 = *:2 (norm+0);
+	r6 = *:2 (norm+1);
+	r7 = *:2 (norm+2);
+}
+
+:TD norm is (op=0x3d & opextA=4) ... & norm
+{
+}
+
+:TF norm is (op=0x3d & opextA=5) ... & norm
+{
+}
+
+:TA norm is (op=0x3d & opextA=6) ... & norm
+{
+}
+
+:TL norm is (op=0x3d & opextA=7) ... & norm
+{
+}
+
+:RD norm is (op=0x3e & opextA=0) ... & norm
+{
+	*:2 (norm+0) = r1;
+	*:2 (norm+1) = r2;
+	# alt: *:4 norm = dr1;
+}
+
+:RF norm is (op=0x3e & opextA=1) ... & norm
+{
+	*:2 (norm+0) = r1;
+	*:2 (norm+1) = r2;
+	*:2 (norm+2) = r3;
+	# alt: *:6 norm = fr1;
+}
+
+:RA norm is (op=0x3e & opextA=2) ... & norm
+{
+	*:2 (norm+0) = r1;
+	*:2 (norm+1) = r2;
+	*:2 (norm+2) = r3;
+	*:2 (norm+3) = r4;
+	*:2 (norm+4) = r5;
+	*:2 (norm+5) = r6;
+	*:2 (norm+6) = r7;
+}
+
+:RL norm is (op=0x3e & opextA=3) ... & norm
+{
+	*:2 (norm+0) = r5;
+	*:2 (norm+1) = r6;
+	*:2 (norm+2) = r7;
+}
+
+:PD norm is (op=0x3e & opextA=4) ... & norm {  }
+:PF norm is (op=0x3e & opextA=5) ... & norm {  }
+:PA norm is (op=0x3e & opextA=6) ... & norm {  }
+:PL norm is (op=0x3e & opextA=7) ... & norm {  }
+
+:MB norm is (op=0x3f & opextA=0) ... & norm
+{
+	$(NB) = *norm;
+}
+
+:IM norm is (op=0x3f & opextA=1) ... & norm
+{
+	$(RM) = *norm >> 6;
+}
+
+:KI norm is (op=0x3f & opextA=2) ... & norm
+{
+	*:2 norm = RZ;
+}
+
+:FI norm is (op=0x3f & opextA=3) ... & norm
+{
+	RZ = *norm;
+}
+
+:SP norm is (op=0x3f & opextA=4) ... & norm
+{
+	IC = *norm;
+	r0 = *(norm+1);
+	SR = *(norm+2);
+}
+
+:MD norm is (op=0x3f & opextA=5) ... & norm
+{
+	MOD = norm;
+}
+
+:RZ norm is (op=0x3f & opextA=6) ... & norm
+{
+	*norm = 0:2;
+}
+
+:IB norm is (op=0x3f & opextA=7) ... & norm
+{
+	*norm = *norm + 1:2;
+	if (*norm != 0:2) goto inst_next;
+	delayslot(1);
+	goto inst_next;
+}
+
+# vim: tabstop=4 shiftwidth=4 autoindent
